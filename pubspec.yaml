@@ -44,6 +44,10 @@ dependencies:
   sign_in_with_apple: ^6.0.0
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^6.1.1
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  crypto: ^3.0.3
   
 
 dev_dependencies:
@@ -67,6 +71,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  # for localization
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:

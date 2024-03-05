@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:trip_market/CustomIcon.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:trip_market/viewModel/login/login_viewmodel.dart';
 
 class LoginWidgets {
-  Widget logo() {
+  Widget logo(BuildContext context) {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
         //logo part
-        child: const Text(
-          'TripMarket',
-          style: TextStyle(
+        child: Text(
+          AppLocalizations.of(context)!.tripMarket,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 48,
             fontWeight: FontWeight.w700,
@@ -19,9 +21,11 @@ class LoginWidgets {
     );
   }
 
-  Widget googleSignInButton() {
+  Widget googleSignInButton(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        await LoginViewModel().requestSignInWithGoogle();
+      },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -46,10 +50,10 @@ class LoginWidgets {
                 width: 24,
               ),
             ),
-            const Center(
+            Center(
               child: Text(
-                'Sign in with Google',
-                style: TextStyle(
+                AppLocalizations.of(context)!.signInWithGoogle,
+                style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                 ),
@@ -61,9 +65,11 @@ class LoginWidgets {
     );
   }
 
-  Widget appleSignInButton() {
+  Widget appleSignInButton(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        await LoginViewModel().requestSignInWithApple();
+      },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -72,10 +78,10 @@ class LoginWidgets {
           color: Colors.black,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Stack(
+        child: Stack(
           alignment: Alignment.centerLeft,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Icon(
                 CustomIcon.apple,
@@ -85,8 +91,8 @@ class LoginWidgets {
             ),
             Center(
               child: Text(
-                'Sign in with Apple',
-                style: TextStyle(
+                AppLocalizations.of(context)!.signInWithApple,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                 ),
@@ -98,9 +104,11 @@ class LoginWidgets {
     );
   }
 
-  Widget facebookSignInButton() {
+  Widget facebookSignInButton(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () async {
+        await LoginViewModel().requestSignInWithFaceBook();
+      },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -109,10 +117,10 @@ class LoginWidgets {
           color: Colors.blue,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Stack(
+        child: Stack(
           alignment: Alignment.centerLeft,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Icon(
                 CustomIcon.facebook,
@@ -122,8 +130,8 @@ class LoginWidgets {
             ),
             Center(
               child: Text(
-                'Sign in with Facebook',
-                style: TextStyle(
+                AppLocalizations.of(context)!.signInWithFacebook,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                 ),
