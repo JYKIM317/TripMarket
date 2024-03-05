@@ -5,13 +5,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthRemote {
   Future<UserCredential> getGoogleCredential() async {
-    GoogleSignInAccount? googleSignIn = await GoogleSignIn(
-      scopes: [
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ],
-      clientId: "tripmarket-ac0b8.apps.googleusercontent.com",
-    ).signIn();
+    GoogleSignInAccount? googleSignIn = await GoogleSignIn().signIn();
 
     GoogleSignInAuthentication? googleAuth = await googleSignIn?.authentication;
 

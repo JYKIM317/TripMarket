@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip_market/CustomIcon.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:trip_market/main.dart';
 import 'package:trip_market/viewModel/login/login_viewmodel.dart';
 
 class LoginWidgets {
@@ -24,7 +25,14 @@ class LoginWidgets {
   Widget googleSignInButton(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await LoginViewModel().requestSignInWithGoogle();
+        await LoginViewModel().requestSignInWithGoogle().then(
+              (_) => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RoutePage(),
+                ),
+              ),
+            );
       },
       child: Container(
         width: double.infinity,
@@ -68,7 +76,14 @@ class LoginWidgets {
   Widget appleSignInButton(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await LoginViewModel().requestSignInWithApple();
+        await LoginViewModel().requestSignInWithApple().then(
+              (_) => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RoutePage(),
+                ),
+              ),
+            );
       },
       child: Container(
         width: double.infinity,
@@ -107,7 +122,14 @@ class LoginWidgets {
   Widget facebookSignInButton(BuildContext context) {
     return InkWell(
       onTap: () async {
-        await LoginViewModel().requestSignInWithFaceBook();
+        await LoginViewModel().requestSignInWithFaceBook().then(
+              (_) => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RoutePage(),
+                ),
+              ),
+            );
       },
       child: Container(
         width: double.infinity,
