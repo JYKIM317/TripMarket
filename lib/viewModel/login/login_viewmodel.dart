@@ -1,4 +1,4 @@
-import 'package:trip_market/data/repository/auth_repository.dart';
+import 'package:trip_market/data/repository/auth/auth_repository.dart';
 
 class LoginViewModel {
   Future<void> requestSignInWithGoogle() async {

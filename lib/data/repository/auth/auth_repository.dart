@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:crypto/crypto.dart';
-import 'package:trip_market/data/source/remote/auth_remote.dart';
+import 'package:trip_market/data/source/remote/auth/auth_remote.dart';
 
 class FirebaseAuthRepository {
   Future<UserCredential> signInWithGoogle() async {
@@ -35,5 +35,9 @@ class FirebaseAuthRepository {
 
   Future<UserCredential> signInWithFacebook() async {
     return await AuthRemote().getFacebookCredential();
+  }
+
+  Future<void> signOutAuth() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

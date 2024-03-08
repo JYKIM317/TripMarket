@@ -2,5 +2,20 @@
     "tripMarket": "TripMarket",
     "signInWithGoogle": "Sign in with Google",
     "signInWithApple": "Sign in with Apple",
-    "signInWithFacebook": "Sign in with Facebook"
+    "signInWithFacebook": "Sign in with Facebook",
+    "settings": "Settings",
+    "account": "Account",
+    "deleteAccount": "Delete account",
+    "language": "Language",
+    "help": "Help",
+    "reportProblem": "Report a problem",
+    "feedback": "Feedback",
+    "signOut": "Sign out",
+    "editProfile": "Edit my profile",
+    "planMyTrip": "Plan my trip",
+    "myPost": "My post",
+    "writeReview": "Write review",
+    "travelPlansYouHave": "Travel plans you have",
+    "recentView": "Recent view",
+    "favoriteTravelPlans": "Favorite travel plans"
 }
