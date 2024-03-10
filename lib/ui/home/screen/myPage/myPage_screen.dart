@@ -15,7 +15,7 @@ class MyPageScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 44, bottom: 34),
         child: Column(
           children: [
-            MyPageScreenWidgets().profile(context),
+            MyPageScreenProfile(),
             const SizedBox(height: 10),
             MyPageScreenWidgets().myFeature(context),
             const SizedBox(height: 10),

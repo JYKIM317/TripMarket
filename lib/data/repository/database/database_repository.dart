@@ -8,7 +8,8 @@ class FirestoreRepository {
     DateTime now = DateTime.now();
     Map<String, dynamic> data = {'lastLogin': now};
     try {
-      FirestoreRemote().updateUserDataToFirestore(uid: userUID, data: data);
+      await FirestoreRemote()
+          .updateUserDataToFirestore(uid: userUID, data: data);
     } catch (e) {
       const String noDocError =
           '[cloud_firestore/not-found] Some requested document was not found.';
@@ -24,8 +25,9 @@ class FirestoreRepository {
     }
   }
 
-  Future<void> updateUserData() async {
-    //String userUID = FirebaseAuth.instance.currentUser!.uid;
+  Future<void> updateUserData({required Map<String, dynamic> data}) async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+    FirestoreRemote().updateUserDataToFirestore(uid: userUID, data: data);
   }
 
   Future<void> setUserData() async {

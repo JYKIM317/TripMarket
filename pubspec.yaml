@@ -48,6 +48,10 @@ dependencies:
     sdk: flutter
   intl: any
   crypto: ^3.0.3
+  image_picker: ^1.0.7
+  firebase_storage: ^11.6.9
+  flutter_image_compress: ^2.1.0
+  google_maps_flutter: ^2.5.3
   
 
 dev_dependencies:

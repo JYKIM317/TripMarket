@@ -17,5 +17,8 @@
     "writeReview": "Write review",
     "travelPlansYouHave": "Travel plans you have",
     "recentView": "Recent view",
-    "favoriteTravelPlans": "Favorite travel plans"
+    "favoriteTravelPlans": "Favorite travel plans",
+    "profileImage": "Profile image",
+    "name": "Name",
+    "nation": "Nation"
 }

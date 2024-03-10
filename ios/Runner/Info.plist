@@ -78,5 +78,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To perform tasks such as uploading and changing profile image, as well as uploading travel destination photos, access to the photo library is required. The uploaded photos will be stored in the user's information and can be changed at any time.</string>
 </dict>
 </plist>

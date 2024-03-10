@@ -1,119 +1,13 @@
+import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:trip_market/ui/settings/settings_page.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/myPage_screen_viewmodel.dart';
 import 'package:trip_market/CustomIcon.dart';
+import 'package:trip_market/ui/settings/settings_page.dart';
+import 'package:trip_market/ui/home/screen/myPage/editMyProfile/editMyProfile_page.dart';
 
 class MyPageScreenWidgets {
-  Widget profile(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          FutureBuilder(
-              future: MyPageScreenViewModel().requestGetUserData(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return loadingProfile(context);
-                }
-                Map<String, dynamic> user = snapshot.data;
-                return Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          radius: 40,
-                          //foregroundImage: ,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                user['name'],
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                user['nation'],
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  //Edit Profile
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .editProfile,
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Colors.grey,
-                                        size: 18,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-          Container(
-            height: double.infinity,
-            alignment: Alignment.topCenter,
-            child: IconButton(
-              onPressed: () {
-                //Settings
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsPage(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.menu_rounded,
-                color: Colors.black,
-                size: 32,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget myFeature(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -341,9 +235,13 @@ Widget loadingProfile(BuildContext context) {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          const CircleAvatar(
-            backgroundColor: Colors.grey,
-            radius: 40,
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -408,4 +306,147 @@ Widget loadingProfile(BuildContext context) {
       ),
     ),
   );
+}
+
+class MyPageScreenProfile extends ConsumerStatefulWidget {
+  const MyPageScreenProfile({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MyPageScreenProfileState();
+}
+
+class _MyPageScreenProfileState extends ConsumerState<MyPageScreenProfile> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 120,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          FutureBuilder(
+              future: MyPageScreenViewModel().requestGetUserData(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return loadingProfile(context);
+                }
+                Map<String, dynamic> user = snapshot.data;
+                String? profileImageUrl = user['profileImage'];
+                return Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: profileImageUrl != null
+                              ? Image.memory(
+                                  base64Decode(profileImageUrl),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user['name'],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                user['nation'],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  //Edit Profile
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditMyProfilePage(
+                                        userData: user,
+                                      ),
+                                    ),
+                                  ).then(
+                                    (_) {
+                                      setState(() {});
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .editProfile,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Colors.grey,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+          Container(
+            height: double.infinity,
+            alignment: Alignment.topCenter,
+            child: IconButton(
+              onPressed: () {
+                //Settings
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsPage(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.menu_rounded,
+                color: Colors.black,
+                size: 32,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
