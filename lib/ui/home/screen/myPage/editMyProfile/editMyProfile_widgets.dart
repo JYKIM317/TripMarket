@@ -35,13 +35,6 @@ class EditMyProfileWidgets {
                 )
               : null,
         )
-        /*
-        CircleAvatar(
-          radius: MediaQuery.of(context).size.width / 4,
-          backgroundColor: Colors.grey,
-          foregroundImage: Image.memory(base64Decode(currentProfileImage)),
-        ),
-        */
       ],
     );
   }
