@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/ui/home/screen/myPage/editMyProfile/editMyProfile_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
     nameController.text = name;
     nation = userData['nation'];
     profileImage = userData['profileImage'];
+    uid = userData['uid'];
     super.initState();
   }
 
@@ -72,8 +74,13 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                         .then(
                       (value) {
                         if (value != null) {
-                          setState(() {
-                            profileImage = value;
+                          ref.read(profile.notifier).update(null);
+                          profileImage = value;
+                          ref.read(profile.notifier).update({
+                            'name': name,
+                            'nation': nation,
+                            'profileImage': profileImage,
+                            'uid': uid,
                           });
                         }
                       },
@@ -81,7 +88,7 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                   },
                   child: EditMyProfileWidgets().profileImage(
                     context: context,
-                    currentProfileImage: profileImage,
+                    currentProfileImage: ref.watch(profile)!['profileImage'],
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -123,6 +130,13 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                       name = text;
                       EditMyProfileViewModel()
                           .requestUpdateProfileName(name: name);
+                      ref.read(profile.notifier).update(null);
+                      ref.read(profile.notifier).update({
+                        'name': name,
+                        'nation': nation,
+                        'profileImage': profileImage,
+                        'uid': uid,
+                      });
                     },
                   ),
                 ),
@@ -140,8 +154,13 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                             .requestUpdateProfileNation()
                             .then((result) {
                           if (result != '') {
-                            setState(() {
-                              nation = result;
+                            ref.read(profile.notifier).update(null);
+                            nation = result;
+                            ref.read(profile.notifier).update({
+                              'name': name,
+                              'nation': nation,
+                              'profileImage': profileImage,
+                              'uid': uid,
                             });
                           }
                         });
@@ -153,7 +172,7 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                   },
                   child: EditMyProfileWidgets().nation(
                     context: context,
-                    currentNation: nation,
+                    currentNation: ref.watch(profile)!['nation'],
                   ),
                 ),
               ],
