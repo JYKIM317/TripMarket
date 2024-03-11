@@ -19,8 +19,7 @@ class GoogleMapRemote {
     String gMapApiKey = Apikeys().gMapApiKey;
     var url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$gMapApiKey';
-    var response = await http.get(
-        Uri.parse(url)); //google maps에서 restrictions가 android일 경우에 ip 제한 발생해버림
+    var response = await http.get(Uri.parse(url));
 
     return response;
   }

@@ -9,11 +9,9 @@ class LocationRepository {
     Position position = await GeoLocatorRemote().getCurrentLocation();
     double lat = position.latitude;
     double lng = position.longitude;
-    print('lat : $lat, lng : $lng');
 
     http.Response response =
         await GoogleMapRemote().getPlaceAddress(lat: lat, lng: lng);
-    print('get address response : $response');
     var currentLocationData = jsonDecode(response.body);
 
     List<dynamic> addressComponents =

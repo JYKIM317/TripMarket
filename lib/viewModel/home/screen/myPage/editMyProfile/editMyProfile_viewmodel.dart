@@ -26,7 +26,6 @@ class EditMyProfileViewModel {
   }
 
   Future<String> requestUpdateProfileNation() async {
-    print('logic start');
     String nation = await LocationRepository().getCurrentNation();
     Map<String, dynamic> data = {'nation': nation};
     FirestoreRepository().updateUserData(data: data);
