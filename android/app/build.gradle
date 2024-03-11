@@ -13,6 +13,11 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def flutterGoogleMapKey = localProperties.getProperty('flutter.GoogleMapKey')
+if (flutterGoogleMapKey == null) {
+    flutterGoogleMapKey = ''
+}
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -50,6 +55,7 @@ android {
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        resValue "string", "GOOGLE_MAP_KEY", flutterGoogleMapKey
     }
 
     buildTypes {

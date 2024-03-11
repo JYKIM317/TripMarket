@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:trip_market/ui/home/screen/myPage/editMyProfile/editMyProfile_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -128,7 +129,28 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                 const SizedBox(height: 20),
                 //Nation
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    await EditMyProfileViewModel()
+                        .locationPermissionCheck()
+                        .then((permission) async {
+                      //permission is grant
+                      if (permission == LocationPermission.whileInUse ||
+                          permission == LocationPermission.always) {
+                        await EditMyProfileViewModel()
+                            .requestUpdateProfileNation()
+                            .then((result) {
+                          if (result != '') {
+                            setState(() {
+                              nation = result;
+                            });
+                          }
+                        });
+                      } else {
+                        //permission is undetermine or denied
+                        permission = await Geolocator.requestPermission();
+                      }
+                    });
+                  },
                   child: EditMyProfileWidgets().nation(
                     context: context,
                     currentNation: nation,
