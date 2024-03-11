@@ -12,7 +12,7 @@
     "feedback": "Feedback",
     "signOut": "Sign out",
     "editProfile": "Edit my profile",
-    "planMyTrip": "Plan my trip",
+    "planNewTrip": "Plan new trip",
     "myPost": "My post",
     "writeReview": "Write review",
     "travelPlansYouHave": "Travel plans you have",
@@ -20,5 +20,10 @@
     "favoriteTravelPlans": "Favorite travel plans",
     "profileImage": "Profile image",
     "name": "Name",
-    "nation": "Nation"
+    "nation": "Nation",
+    "save": "Save",
+    "tripTitle": "Trip title",
+    "tripDuration": "Trip duration",
+    "days": "Days",
+    "places": "Places"
 }

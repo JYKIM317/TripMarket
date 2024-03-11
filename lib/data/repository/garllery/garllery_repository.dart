@@ -13,7 +13,8 @@ class LocalGarlleryRepository {
         Uint8List compressedImage =
             await compressImage(filePath: selectedImage.path, quality: q);
 
-        if (compressedImage.lengthInBytes < 1048487) {
+        if (compressedImage.lengthInBytes < 1028487) {
+          //firestore doc limit size is 1,048,487
           profileImage = compressedImage;
           break;
         }

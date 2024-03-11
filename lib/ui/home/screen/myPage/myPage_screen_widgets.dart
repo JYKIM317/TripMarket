@@ -224,7 +224,7 @@ class MyPageScreenWidgets {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      AppLocalizations.of(context)!.planMyTrip,
+                      AppLocalizations.of(context)!.planNewTrip,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],
