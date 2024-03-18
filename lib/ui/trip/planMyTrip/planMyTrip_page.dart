@@ -40,8 +40,7 @@ class _PlanMyTripPageState extends ConsumerState<PlanMyTripPage> {
 
   @override
   Widget build(BuildContext context) {
-    UserProfile profile =
-        ref.watch(profileProvider).userProfile ?? UserProfile.initial();
+    UserProfile profile = ref.watch(profileProvider).userProfile!;
 
     return PopScope(
       canPop: false,
