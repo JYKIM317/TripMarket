@@ -1,27 +1,29 @@
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:trip_market/data/source/local/garllery/garllery_local.dart';
-//import 'package:trip_market/data/source/remote/garllery/garllery_remote.dart';
+import 'package:trip_market/data/source/remote/garllery/garllery_remote.dart';
 
 class LocalGarlleryRepository {
-  Future<Uint8List?> getImageFile() async {
+  Future<XFile?> getImageFile() async {
     XFile? selectedImage = await LocalGarllery().getImageFromGarllery();
-    Uint8List? profileImage;
 
-    if (selectedImage != null) {
-      for (int q = 90; q > 10; q - 10) {
-        Uint8List compressedImage =
-            await compressImage(filePath: selectedImage.path, quality: q);
+    return selectedImage;
+  }
+}
 
-        if (compressedImage.lengthInBytes < 1028487) {
-          //firestore doc limit size is 1,048,487
-          profileImage = compressedImage;
-          break;
-        }
-      }
-    }
-
-    return profileImage;
+class RemoteGarlleryRepository {
+  Future<String> uploadAndGetImageUrl({
+    required String imageName,
+    required File imageFile,
+  }) {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseStorageRemote().uploadImageToStorageReturnUrl(
+      uid: uid,
+      imageName: imageName,
+      imageFile: imageFile,
+    );
   }
 }
 

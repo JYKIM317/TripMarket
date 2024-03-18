@@ -25,5 +25,9 @@
     "tripTitle": "Trip title",
     "tripDuration": "Trip duration",
     "days": "Days",
-    "places": "Places"
+    "destination": "Destination",
+    "location": "Location",
+    "selectThisLocation": "Select this location",
+    "addPlace": "Add place"
+
 }

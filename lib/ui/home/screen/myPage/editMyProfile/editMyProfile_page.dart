@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:trip_market/model/user_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/ui/home/screen/myPage/editMyProfile/editMyProfile_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,8 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/editMyProfile/editMyProfile_viewmodel.dart';
 
 class EditMyProfilePage extends ConsumerStatefulWidget {
-  final userData;
-  const EditMyProfilePage({super.key, required this.userData});
+  const EditMyProfilePage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -17,23 +17,11 @@ class EditMyProfilePage extends ConsumerStatefulWidget {
 
 class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
   TextEditingController nameController = TextEditingController();
-  late String name, uid, nation;
-  String? profileImage;
-  late Map<String, dynamic> userData;
-
-  @override
-  void initState() {
-    userData = widget.userData;
-    name = userData['name'];
-    nameController.text = name;
-    nation = userData['nation'];
-    profileImage = userData['profileImage'];
-    uid = userData['uid'];
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    UserProfile profile = ref.watch(profileProvider).userProfile!;
+    nameController.text = profile.name!;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -70,25 +58,18 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                 InkWell(
                   onTap: () async {
                     await EditMyProfileViewModel()
-                        .requestUpdateProfileImage()
+                        .requestUpdateProfileImage(profile: profile)
                         .then(
                       (value) {
                         if (value != null) {
-                          ref.read(profile.notifier).update(null);
-                          profileImage = value;
-                          ref.read(profile.notifier).update({
-                            'name': name,
-                            'nation': nation,
-                            'profileImage': profileImage,
-                            'uid': uid,
-                          });
+                          profile.profileImage = value;
                         }
                       },
                     );
                   },
                   child: EditMyProfileWidgets().profileImage(
                     context: context,
-                    currentProfileImage: ref.watch(profile)!['profileImage'],
+                    currentProfileImage: profile.profileImage,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -127,16 +108,9 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                     minLines: 1,
                     maxLines: 1,
                     onSubmitted: (text) {
-                      name = text;
+                      profile.name = text;
                       EditMyProfileViewModel()
-                          .requestUpdateProfileName(name: name);
-                      ref.read(profile.notifier).update(null);
-                      ref.read(profile.notifier).update({
-                        'name': name,
-                        'nation': nation,
-                        'profileImage': profileImage,
-                        'uid': uid,
-                      });
+                          .requestUpdateProfileName(profile: profile);
                     },
                   ),
                 ),
@@ -151,17 +125,10 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                       if (permission == LocationPermission.whileInUse ||
                           permission == LocationPermission.always) {
                         await EditMyProfileViewModel()
-                            .requestUpdateProfileNation()
+                            .requestUpdateProfileNation(profile: profile)
                             .then((result) {
                           if (result != '') {
-                            ref.read(profile.notifier).update(null);
-                            nation = result;
-                            ref.read(profile.notifier).update({
-                              'name': name,
-                              'nation': nation,
-                              'profileImage': profileImage,
-                              'uid': uid,
-                            });
+                            profile.nation = result;
                           }
                         });
                       } else {
@@ -170,10 +137,8 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                       }
                     });
                   },
-                  child: EditMyProfileWidgets().nation(
-                    context: context,
-                    currentNation: ref.watch(profile)!['nation'],
-                  ),
+                  child: EditMyProfileWidgets()
+                      .nation(context: context, currentNation: profile.nation!),
                 ),
               ],
             ),
