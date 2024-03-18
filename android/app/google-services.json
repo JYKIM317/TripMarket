@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "642773880714",
+    "project_id": "tripmarket-ac0b8",
+    "storage_bucket": "tripmarket-ac0b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642773880714:android:10793ee8333bc6b4b50273",
+        "android_client_info": {
+          "package_name": "com.delivalue.tripmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642773880714-0pp9jr5ukn68t1jk8hkohob9l1s37iau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.delivalue.tripmarket",
+            "certificate_hash": "af4dcbdbf7e450e0a6737fb43b72f5361667a026"
+          }
+        },
+        {
+          "client_id": "642773880714-3qjauevel4a4ugovusg0g5r8uslh4kl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-WBG_T0aBNB9tHqLVsg-wgQL5K6lloWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642773880714-3qjauevel4a4ugovusg0g5r8uslh4kl4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "642773880714-n3gcrcb2tk9ksc64gdcltrrql2cuju5v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.delivalue.tripmarket"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
