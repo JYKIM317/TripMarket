@@ -28,6 +28,7 @@
     "destination": "Destination",
     "location": "Location",
     "selectThisLocation": "Select this location",
-    "addPlace": "Add place"
-
+    "addPlace": "Add place",
+    "saveSucceed": "Save succeed",
+    "saveFailed": "Save failed"
 }

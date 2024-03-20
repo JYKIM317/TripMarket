@@ -63,10 +63,12 @@ class _TripDurationWidgetState extends ConsumerState<TripDurationWidget> {
                   return TextButton(
                     onPressed: () {
                       removeOverlay();
-                      ref.read(newTripDuration.notifier).update(null);
-                      ref.read(newTripDuration.notifier).update(dayList[idx]);
-                      ref.read(planOfDaysIndex.notifier).update(null);
-                      ref.read(planOfDaysIndex.notifier).update(0);
+                      Trip planData = ref.watch(tripProvider).trip!;
+                      planData.duration = dayList[idx];
+                      ref.read(planOfDaysIndex.notifier).selectIndex(0);
+                      ref
+                          .read(tripProvider)
+                          .modifyTripData(modifiedTripData: planData);
                     },
                     child: Text(
                       dayList[idx].toString(),
@@ -97,6 +99,7 @@ class _TripDurationWidgetState extends ConsumerState<TripDurationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Trip planData = ref.watch(tripProvider).trip!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -135,7 +138,7 @@ class _TripDurationWidgetState extends ConsumerState<TripDurationWidget> {
                       ],
                     ),
                     child: Text(
-                      ref.watch(newTripDuration)!.toString(),
+                      planData.duration.toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -162,6 +165,58 @@ class _TripDurationWidgetState extends ConsumerState<TripDurationWidget> {
 
 //
 
+class TripTitleWidget extends ConsumerStatefulWidget {
+  const TripTitleWidget({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _TripTitleWidgetState();
+}
+
+class _TripTitleWidgetState extends ConsumerState<TripTitleWidget> {
+  TextEditingController titleController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.tripTitle,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 1,
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: titleController,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+//
+
 class PlanOfDaysWidget extends ConsumerStatefulWidget {
   const PlanOfDaysWidget({super.key});
 
@@ -174,9 +229,10 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
   Map<dynamic, List<TextEditingController>> detailControllers = {};
   @override
   Widget build(BuildContext context) {
-    final tripDuration = ref.watch(newTripDuration)!;
+    Trip planData = ref.watch(tripProvider).trip!;
     final selectedDay = ref.watch(planOfDaysIndex)!;
-    final planOfDaySchedule = ref.watch(planOfDayData);
+    final tripDuration = planData.duration;
+    final planOfDaySchedule = planData.planOfDay;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -194,8 +250,7 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
               itemBuilder: (BuildContext ctx, int idx) {
                 return InkWell(
                   onTap: () {
-                    ref.read(planOfDaysIndex.notifier).update(null);
-                    ref.read(planOfDaysIndex.notifier).update(idx);
+                    ref.read(planOfDaysIndex.notifier).selectIndex(idx);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -226,7 +281,7 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
           ListView.separated(
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
-            itemCount: planOfDaySchedule!['$selectedDay']?.length ?? 0,
+            itemCount: planOfDaySchedule['$selectedDay']?.length ?? 0,
             itemBuilder: (BuildContext ctx2, int idx2) {
               double minHeight = MediaQuery.of(context).size.width - 32;
               return Container(
@@ -259,11 +314,11 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                           if (file != null) {
                             planOfDaySchedule['$selectedDay']![idx2]['image'] =
                                 file;
-                            Map<String, List<dynamic>> schedule =
-                                planOfDaySchedule;
+                            planData.planOfDay = planOfDaySchedule;
 
-                            ref.read(planOfDayData.notifier).update(null);
-                            ref.read(planOfDayData.notifier).update(schedule);
+                            ref
+                                .read(tripProvider)
+                                .modifyTripData(modifiedTripData: planData);
                           }
                         });
                       },
@@ -290,8 +345,6 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                     //Location
                     InkWell(
                       onTap: () async {
-                        Map<String, List<dynamic>> schedule = planOfDaySchedule;
-                        ref.read(planOfDayData.notifier).update(schedule);
                         //Google Maps 연동 후 lat lng 가져오기
                         await PlanMyTripViewModel().requestGetMyPosition().then(
                           (position) {
@@ -367,10 +420,11 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                         onChanged: (detail) {
                           planOfDaySchedule['$selectedDay']![idx2]['detail'] =
                               detail;
-                          Map<String, List<dynamic>> schedule =
-                              planOfDaySchedule;
-                          ref.read(planOfDayData.notifier).update(null);
-                          ref.read(planOfDayData.notifier).update(schedule);
+
+                          planData.planOfDay = planOfDaySchedule;
+                          ref
+                              .read(tripProvider)
+                              .modifyTripData(modifiedTripData: planData);
                         },
                       ),
                     ),
@@ -389,16 +443,15 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
               List<dynamic> temporaryList =
                   planOfDaySchedule['$selectedDay'] ?? [];
               temporaryList.add({});
-              Map<String, List<dynamic>> schedule = planOfDaySchedule;
-              schedule['$selectedDay'] = temporaryList;
+              planOfDaySchedule['$selectedDay'] = temporaryList;
 
               List<TextEditingController> controllers =
                   detailControllers[selectedDay] ?? [];
               controllers.add(TextEditingController());
               detailControllers[selectedDay] = controllers;
 
-              ref.read(planOfDayData.notifier).update(null);
-              ref.read(planOfDayData.notifier).update(schedule);
+              planData.planOfDay = planOfDaySchedule;
+              ref.read(tripProvider).modifyTripData(modifiedTripData: planData);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

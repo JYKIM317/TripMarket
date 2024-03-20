@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:trip_market/viewModel/trip/planMyTrip_viewmodel.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
+import 'package:trip_market/model/trip_model.dart';
 
 class SelectPlaceMapView extends ConsumerStatefulWidget {
   final Map<String, dynamic> locationData;
@@ -40,6 +41,7 @@ class _SelectPlaceMapViewState extends ConsumerState<SelectPlaceMapView> {
 
   @override
   Widget build(BuildContext context) {
+    Trip planData = ref.watch(tripProvider).trip!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -77,21 +79,22 @@ class _SelectPlaceMapViewState extends ConsumerState<SelectPlaceMapView> {
         child: InkWell(
           onTap: () async {
             if (selectLat != null && selectLng != null) {
+              int selectedDay = locationData['selectedDay'];
+              int idx = locationData['idx'];
               await PlanMyTripViewModel()
                   .requestGetThisAddress(lat: selectLat!, lng: selectLng!)
                   .then((result) {
-                Map<String, List<dynamic>>? eachPlanOfDay =
-                    ref.watch(planOfDayData);
-                Map<String, List<dynamic>>? temporaryData = eachPlanOfDay;
-                temporaryData![locationData['selectedDay']]![
-                    locationData['idx']]['location'] = result;
-                temporaryData[locationData['selectedDay']]![locationData['idx']]
-                    ['lat'] = selectLat;
-                temporaryData[locationData['selectedDay']]![locationData['idx']]
-                    ['lng'] = selectLng;
+                Trip temporaryPlan = planData;
+                Map<String, List<dynamic>> temporaryData = planData.planOfDay;
+                temporaryData[selectedDay]![idx]['location'] = result;
+                temporaryData[selectedDay]![idx]['lat'] = selectLat;
+                temporaryData[selectedDay]![idx]['lng'] = selectLng;
 
-                ref.read(planOfDayData.notifier).update(null);
-                ref.read(planOfDayData.notifier).update(temporaryData);
+                temporaryPlan.planOfDay = temporaryData;
+
+                ref
+                    .read(tripProvider)
+                    .modifyTripData(modifiedTripData: temporaryPlan);
 
                 Navigator.pop(context);
               });

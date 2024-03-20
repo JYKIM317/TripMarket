@@ -16,7 +16,6 @@ class MyPageScreenWidgets {
         UserProfile? profile = ref.watch(profileProvider).userProfile;
         if (profile == null) {
           ref.read(profileProvider).fetchUserProfile();
-
           return loadingProfile(context);
         }
 
@@ -166,10 +165,8 @@ class MyPageScreenWidgets {
                         ref.watch(profileProvider).userProfile!;
                     String currentNation = profile.nation ?? '';
                     if (currentNation != '') {
-                      ref.read(newTripDuration.notifier).update(1);
-                      ref.read(planOfDaysIndex.notifier).update(0);
-                      ref.read(planOfDayData.notifier).update(null);
-                      ref.read(planOfDayData.notifier).update({});
+                      ref.read(tripProvider).tripInitialization(currentNation);
+                      ref.read(planOfDaysIndex.notifier).selectIndex(0);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
