@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/data/repository/garllery/garllery_repository.dart';
 import 'package:trip_market/data/repository/location/location_repository.dart';
 import 'package:trip_market/model/user_model.dart';
+import 'package:trip_market/provider/myPage_provider.dart';
 
 class EditMyProfileViewModel {
-  Future<String?> requestUpdateProfileImage(
-      {required UserProfile profile}) async {
+  Future<void> requestUpdateProfileImage(
+      {required UserProfile profile, required WidgetRef ref}) async {
     XFile? imageFile = await LocalGarlleryRepository().getImageFile();
     Uint8List? profileImage;
     String? base64Image;
@@ -25,29 +26,25 @@ class EditMyProfileViewModel {
           break;
         }
       }
-
       base64Image = base64Encode(profileImage!);
-
       profile.profileImage = base64Image;
-      FirestoreRepository().updateUserProfile(userProfile: profile);
+      ref.read(profileProvider).updateUserProfile(profile: profile);
     }
-
-    return base64Image;
   }
 
   Future<void> requestUpdateProfileName({
     required UserProfile profile,
+    required WidgetRef ref,
   }) async {
-    FirestoreRepository().updateUserProfile(userProfile: profile);
+    ref.read(profileProvider).updateUserProfile(profile: profile);
   }
 
-  Future<String> requestUpdateProfileNation(
-      {required UserProfile profile}) async {
+  Future<void> requestUpdateProfileNation(
+      {required UserProfile profile, required WidgetRef ref}) async {
     String nation = await LocationRepository().getCurrentNation();
     profile.nation = nation;
 
-    FirestoreRepository().updateUserProfile(userProfile: profile);
-    return nation;
+    ref.read(profileProvider).updateUserProfile(profile: profile);
   }
 
   Future<LocationPermission> locationPermissionCheck() async {

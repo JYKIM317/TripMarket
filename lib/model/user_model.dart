@@ -16,6 +16,13 @@ class UserProfile {
     uid = json['uid'] ?? FirebaseAuth.instance.currentUser!.uid;
   }
 
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'nation': nation,
+        'profileImage': profileImage,
+        'uid': uid,
+      };
+
   factory UserProfile.initial() {
     return UserProfile(
       name: 'user_${FirebaseAuth.instance.currentUser!.uid.substring(1, 5)}',
@@ -24,11 +31,4 @@ class UserProfile {
       uid: FirebaseAuth.instance.currentUser!.uid,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'nation': nation,
-        'profileImage': profileImage,
-        'uid': uid,
-      };
 }

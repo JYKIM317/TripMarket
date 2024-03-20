@@ -1,36 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_market/CustomIcon.dart';
+import 'package:trip_market/provider/home_provider.dart';
 import 'package:trip_market/ui/home/screen/home/home_screen.dart';
 import 'package:trip_market/ui/home/screen/search/search_screen.dart';
 import 'package:trip_market/ui/home/screen/myPage/myPage_screen.dart';
-import 'package:trip_market/viewModel/home/home_viewmodel.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage> {
-  int currentIndex = 0;
-  onBottomTapped(int index) {
-    if (index != currentIndex) {
-      setState(() {
-        currentIndex = index;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    HomeViewModel().requestUpdateLastLoginHistory();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    int currentIndex = ref.watch(homeProvider)!;
+    ref.read(homeProvider.notifier).requestUpdateLastLoginHistory();
     return Scaffold(
       backgroundColor: Colors.white,
       body: [
@@ -55,7 +37,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ],
         currentIndex: currentIndex,
-        onTap: onBottomTapped,
+        onTap: ref.read(homeProvider.notifier).selectIndex,
         backgroundColor: Colors.white,
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.black,

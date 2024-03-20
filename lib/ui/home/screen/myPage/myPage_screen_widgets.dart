@@ -10,16 +10,16 @@ import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/model/user_model.dart';
 
 class MyPageScreenWidgets {
-  Widget myProfile({
-    required BuildContext context,
-  }) {
+  Widget myProfile() {
     return Consumer(
       builder: (context, ref, child) {
         UserProfile? profile = ref.watch(profileProvider).userProfile;
         if (profile == null) {
-          ref.watch(profileProvider).fetchUserProfile();
+          ref.read(profileProvider).fetchUserProfile();
+
           return loadingProfile(context);
         }
+
         return Container(
           width: double.infinity,
           height: 120,
@@ -55,7 +55,7 @@ class MyPageScreenWidgets {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              profile.name!,
+                              ref.watch(profileProvider).userProfile!.name!,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 24,
@@ -138,7 +138,7 @@ class MyPageScreenWidgets {
     );
   }
 
-  Widget myFeature({required BuildContext context}) {
+  Widget myFeature() {
     return Consumer(
       builder: (context, ref, child) {
         return Padding(
@@ -162,7 +162,7 @@ class MyPageScreenWidgets {
               children: [
                 InkWell(
                   onTap: () {
-                    UserProfile? profile =
+                    UserProfile profile =
                         ref.watch(profileProvider).userProfile!;
                     String currentNation = profile.nation ?? '';
                     if (currentNation != '') {
@@ -283,97 +283,109 @@ class MyPageScreenWidgets {
     );
   }
 
-  Widget recentWatch(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 260,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.recentView,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 21,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 20),
-          //Local Data Source Repository랑 연결
-        ],
-      ),
-    );
-  }
-
-  Widget myTravelPlans(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 260,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+  Widget recentWatch() {
+    return Consumer(
+      builder: (context, ref, child) {
+        return Container(
+          width: double.infinity,
+          height: 260,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.of(context)!.travelPlansYouHave,
+                AppLocalizations.of(context)!.recentView,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 21,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.black,
-                  size: 21,
-                ),
-              ),
+              const SizedBox(height: 20),
+              //Local Data Source Repository랑 연결
             ],
           ),
-          const SizedBox(height: 20),
-          //Remote Data Source Repository랑 연결
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget favoritePlan(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 260,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+  Widget myTravelPlans() {
+    return Consumer(
+      builder: (context, ref, child) {
+        return Container(
+          width: double.infinity,
+          height: 260,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                AppLocalizations.of(context)!.favoriteTravelPlans,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 21,
-                  fontWeight: FontWeight.w500,
-                ),
+              Row(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.travelPlansYouHave,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.black,
+                      size: 21,
+                    ),
+                  ),
+                ],
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.black,
-                  size: 21,
-                ),
-              ),
+              const SizedBox(height: 20),
+              //Remote Data Source Repository랑 연결
             ],
           ),
+        );
+      },
+    );
+  }
 
-          const SizedBox(height: 20),
-          //Local Data Source Repository랑 연결
-        ],
-      ),
+  Widget favoritePlan() {
+    return Consumer(
+      builder: (context, ref, child) {
+        return Container(
+          width: double.infinity,
+          height: 260,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.favoriteTravelPlans,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.black,
+                      size: 21,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+              //Local Data Source Repository랑 연결
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,9 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/myPage_screen_viewmodel.dart';
 
-final profileProvider = ChangeNotifierProvider<MyPageScreenViewModel>((ref) {
-  return MyPageScreenViewModel();
+final firestoreRepositoryProvider = Provider((ref) => FirestoreRepository());
+
+final profileProvider = ChangeNotifierProvider<UserProfileViewModel>((ref) {
+  return UserProfileViewModel(ref.watch(firestoreRepositoryProvider));
 });
+//
 
 final newTripDuration =
     StateNotifierProvider<NewTripDurationNotifier, int?>((ref) {

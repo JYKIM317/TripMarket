@@ -7,21 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/editMyProfile/editMyProfile_viewmodel.dart';
 
-class EditMyProfilePage extends ConsumerStatefulWidget {
+class EditMyProfilePage extends ConsumerWidget {
   const EditMyProfilePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EditMyProfilePageState();
-}
-
-class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
-  TextEditingController nameController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     UserProfile profile = ref.watch(profileProvider).userProfile!;
-    nameController.text = profile.name!;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -56,64 +47,15 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
               children: [
                 //Profile image
                 InkWell(
-                  onTap: () async {
-                    await EditMyProfileViewModel()
-                        .requestUpdateProfileImage(profile: profile)
-                        .then(
-                      (value) {
-                        if (value != null) {
-                          profile.profileImage = value;
-                        }
-                      },
-                    );
+                  onTap: () {
+                    EditMyProfileViewModel()
+                        .requestUpdateProfileImage(profile: profile, ref: ref);
                   },
-                  child: EditMyProfileWidgets().profileImage(
-                    context: context,
-                    currentProfileImage: profile.profileImage,
-                  ),
+                  child: EditMyProfileWidgets().profileImage(),
                 ),
                 const SizedBox(height: 20),
                 //Name
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: TextField(
-                    controller: nameController,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.name,
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey,
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    minLines: 1,
-                    maxLines: 1,
-                    onSubmitted: (text) {
-                      profile.name = text;
-                      EditMyProfileViewModel()
-                          .requestUpdateProfileName(profile: profile);
-                    },
-                  ),
-                ),
+                EditMyProfileName(),
                 const SizedBox(height: 20),
                 //Nation
                 InkWell(
@@ -124,21 +66,15 @@ class _EditMyProfilePageState extends ConsumerState<EditMyProfilePage> {
                       //permission is grant
                       if (permission == LocationPermission.whileInUse ||
                           permission == LocationPermission.always) {
-                        await EditMyProfileViewModel()
-                            .requestUpdateProfileNation(profile: profile)
-                            .then((result) {
-                          if (result != '') {
-                            profile.nation = result;
-                          }
-                        });
+                        EditMyProfileViewModel().requestUpdateProfileNation(
+                            profile: profile, ref: ref);
                       } else {
                         //permission is undetermine or denied
                         permission = await Geolocator.requestPermission();
                       }
                     });
                   },
-                  child: EditMyProfileWidgets()
-                      .nation(context: context, currentNation: profile.nation!),
+                  child: EditMyProfileWidgets().nation(),
                 ),
               ],
             ),
