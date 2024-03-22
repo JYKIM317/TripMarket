@@ -41,15 +41,32 @@ class Trip {
         'planOfDay': jsonEncode(planOfDay),
       };
 
-  factory Trip.initial({required String nation}) {
-    return Trip(
-      docName: 'tripPlan_${Random().nextInt(4294967296)}',
-      title: '',
-      nation: nation,
-      duration: 1,
-      createAt: DateTime.now(),
-      uid: FirebaseAuth.instance.currentUser!.uid,
-      planOfDay: {},
-    );
-  }
+  Trip copyWith({
+    String? docName,
+    String? title,
+    String? nation,
+    int? duration,
+    DateTime? createAt,
+    String? uid,
+    Map<String, List<dynamic>>? planOfDay,
+  }) =>
+      Trip(
+        docName: docName ?? this.docName,
+        title: title ?? this.title,
+        nation: nation ?? this.nation,
+        duration: duration ?? this.duration,
+        createAt: createAt ?? this.createAt,
+        uid: uid ?? this.uid,
+        planOfDay: planOfDay ?? this.planOfDay,
+      );
+
+  factory Trip.initial({required String nation}) => Trip(
+        docName: 'tripPlan_${Random().nextInt(4294967296)}',
+        title: '',
+        nation: nation,
+        duration: 1,
+        createAt: DateTime.now(),
+        uid: FirebaseAuth.instance.currentUser!.uid,
+        planOfDay: {},
+      );
 }

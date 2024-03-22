@@ -35,4 +35,17 @@ class FirestoreRemote {
 
     await firestoreAddress.update(data);
   }
+
+  Future<void> saveTripToFirestore({
+    required String uid,
+    required Map<String, dynamic> json,
+  }) async {
+    DocumentReference firestoreAddress = FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection('myTrip')
+        .doc(json['docName']);
+
+    await firestoreAddress.set(json);
+  }
 }

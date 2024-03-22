@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trip_market/data/source/remote/database/database_remote.dart';
 import 'package:trip_market/model/user_model.dart';
+import 'package:trip_market/model/trip_model.dart';
 
 class FirestoreRepository {
   Future<UserProfile> getUserProfile() async {
@@ -39,5 +40,12 @@ class FirestoreRepository {
     Map<String, dynamic> json = userProfile.toJson();
 
     await FirestoreRemote().updateUserProfileToFirestore(json: json);
+  }
+
+  Future<void> saveTrip({required Trip trip}) async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+    Map<String, dynamic> json = trip.toJson();
+
+    await FirestoreRemote().saveTripToFirestore(uid: userUID, json: json);
   }
 }

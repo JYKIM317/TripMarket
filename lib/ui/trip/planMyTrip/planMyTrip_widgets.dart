@@ -178,6 +178,7 @@ class _TripTitleWidgetState extends ConsumerState<TripTitleWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Trip planData = ref.watch(tripProvider).trip!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -208,6 +209,10 @@ class _TripTitleWidgetState extends ConsumerState<TripTitleWidget> {
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),
+            onChanged: (title) {
+              planData.title = title;
+              ref.read(tripProvider).modifyTripData(modifiedTripData: planData);
+            },
           ),
         ),
       ],
@@ -284,6 +289,8 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
             itemCount: planOfDaySchedule['$selectedDay']?.length ?? 0,
             itemBuilder: (BuildContext ctx2, int idx2) {
               double minHeight = MediaQuery.of(context).size.width - 32;
+              var thisImage = planOfDaySchedule['$selectedDay']![idx2]['image'];
+              bool isFile = thisImage.runtimeType != String;
               return Container(
                 width: double.infinity,
                 constraints: BoxConstraints(
@@ -312,9 +319,7 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                             .requestGetImageFile()
                             .then((file) {
                           if (file != null) {
-                            planOfDaySchedule['$selectedDay']![idx2]['image'] =
-                                file;
-                            planData.planOfDay = planOfDaySchedule;
+                            thisImage = file;
 
                             ref
                                 .read(tripProvider)
@@ -325,9 +330,7 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                       child: SizedBox(
                         width: double.infinity,
                         height: minHeight * 0.7,
-                        child: planOfDaySchedule['$selectedDay']![idx2]
-                                    ['image'] ==
-                                null
+                        child: thisImage == null
                             ? Container(
                                 color: Colors.grey,
                                 alignment: Alignment.center,
@@ -337,9 +340,9 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                                   color: Colors.white,
                                 ),
                               )
-                            : Image.file(
-                                planOfDaySchedule['$selectedDay']![idx2]
-                                    ['image']),
+                            : isFile
+                                ? Image.file(thisImage)
+                                : Image.network(thisImage),
                       ),
                     ),
                     //Location
@@ -421,7 +424,6 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                           planOfDaySchedule['$selectedDay']![idx2]['detail'] =
                               detail;
 
-                          planData.planOfDay = planOfDaySchedule;
                           ref
                               .read(tripProvider)
                               .modifyTripData(modifiedTripData: planData);

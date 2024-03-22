@@ -79,22 +79,19 @@ class _SelectPlaceMapViewState extends ConsumerState<SelectPlaceMapView> {
         child: InkWell(
           onTap: () async {
             if (selectLat != null && selectLng != null) {
-              int selectedDay = locationData['selectedDay'];
+              String selectedDay = locationData['selectedDay'];
               int idx = locationData['idx'];
               await PlanMyTripViewModel()
                   .requestGetThisAddress(lat: selectLat!, lng: selectLng!)
                   .then((result) {
-                Trip temporaryPlan = planData;
                 Map<String, List<dynamic>> temporaryData = planData.planOfDay;
                 temporaryData[selectedDay]![idx]['location'] = result;
                 temporaryData[selectedDay]![idx]['lat'] = selectLat;
                 temporaryData[selectedDay]![idx]['lng'] = selectLng;
 
-                temporaryPlan.planOfDay = temporaryData;
-
                 ref
                     .read(tripProvider)
-                    .modifyTripData(modifiedTripData: temporaryPlan);
+                    .modifyTripData(modifiedTripData: planData);
 
                 Navigator.pop(context);
               });

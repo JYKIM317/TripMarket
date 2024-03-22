@@ -23,22 +23,44 @@ class TripViewModel extends ChangeNotifier {
   }
 
   Future<bool> requestSaveMyPlan() async {
-    Trip tripData = _trip!;
-    List<String> plans = tripData.planOfDay.keys.toList();
+    bool result = false;
+
+    Map<String, List<dynamic>> modifyData = Map.from(trip!.planOfDay);
+
+    List<String> plans = modifyData.keys.toList();
     for (String plan in plans) {
-      int count = tripData.planOfDay[plan]?.length ?? 0;
+      List<dynamic> eachDay = List.from(modifyData[plan]!);
+      int count = eachDay.length;
       for (int i = 0; i < count; i++) {
-        File imageFile = tripData.planOfDay[plan]![i]['image'];
-        String imageName = '${tripData.docName}-$plan-$i';
-        String imageUrl = await RemoteGarlleryRepository().uploadAndGetImageUrl(
-          imageName: imageName,
-          imageFile: imageFile,
-        );
-        tripData.planOfDay[plan]![i]['image'] = imageUrl;
+        Map<String, dynamic> eachPlan = Map.from(eachDay[i]);
+        File? imageFile = eachPlan['image'];
+        String imageName = '${_trip!.docName}-$plan-$i';
+        if (imageFile != null && imageFile.runtimeType == File) {
+          String imageUrl =
+              await RemoteGarlleryRepository().uploadAndGetImageUrl(
+            imageName: imageName,
+            imageFile: imageFile,
+          );
+
+          eachPlan['image'] = imageUrl;
+          eachDay[i] = eachPlan;
+          modifyData[plan] = eachDay;
+        }
       }
     }
+    print('initial: ${trip!.planOfDay}');
+    print('modify: ${modifyData}');
 
-    return true;
-    //return FirestoreRepository().setPlanData(data: tripData);
+    Trip convertTrip = trip!.copyWith(planOfDay: modifyData);
+
+    try {
+      await FirestoreRepository().saveTrip(trip: convertTrip).then((value) {
+        result = true;
+      });
+    } catch (e) {
+      result = false;
+    }
+
+    return result;
   }
 }
