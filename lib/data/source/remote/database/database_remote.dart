@@ -48,4 +48,13 @@ class FirestoreRemote {
 
     await firestoreAddress.set(json);
   }
+
+  Future<QuerySnapshot?> getMyTripFromFirestore({required String uid}) async {
+    CollectionReference firestoreAddress = FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection('myTrip');
+
+    return await firestoreAddress.get();
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trip_market/data/source/remote/database/database_remote.dart';
 import 'package:trip_market/model/user_model.dart';
@@ -47,5 +48,28 @@ class FirestoreRepository {
     Map<String, dynamic> json = trip.toJson();
 
     await FirestoreRemote().saveTripToFirestore(uid: userUID, json: json);
+  }
+
+  Future<List<Trip>> getUserTrip() async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+    List<Trip> myTripList = [];
+    await FirestoreRemote()
+        .getMyTripFromFirestore(uid: userUID)
+        .then((snapshot) {
+      if (snapshot != null) {
+        for (QueryDocumentSnapshot doc in snapshot.docs) {
+          Map<String, dynamic> docData = doc.data() as Map<String, dynamic>;
+          Trip thisTrip = Trip.fromJson(docData);
+          myTripList.add(thisTrip);
+        }
+
+        //sort by descending
+        if (myTripList.isNotEmpty) {
+          myTripList.sort((a, b) => b.createAt.compareTo(a.createAt));
+        }
+      }
+    });
+
+    return myTripList;
   }
 }

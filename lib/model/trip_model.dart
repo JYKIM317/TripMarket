@@ -26,7 +26,7 @@ class Trip {
     title = json['title'];
     nation = json['nation'];
     duration = json['duration'];
-    createAt = json['createAt'];
+    createAt = json['createAt'].toDate();
     uid = json['uid'];
     planOfDay = jsonDecode(json['planOfDay']);
   }
