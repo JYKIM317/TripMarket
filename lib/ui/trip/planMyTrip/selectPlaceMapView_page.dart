@@ -84,7 +84,7 @@ class _SelectPlaceMapViewState extends ConsumerState<SelectPlaceMapView> {
               await PlanMyTripViewModel()
                   .requestGetThisAddress(lat: selectLat!, lng: selectLng!)
                   .then((result) {
-                Map<String, List<dynamic>> temporaryData = planData.planOfDay;
+                Map<String, dynamic> temporaryData = planData.planOfDay;
                 temporaryData[selectedDay]![idx]['location'] = result;
                 temporaryData[selectedDay]![idx]['lat'] = selectLat;
                 temporaryData[selectedDay]![idx]['lng'] = selectLng;

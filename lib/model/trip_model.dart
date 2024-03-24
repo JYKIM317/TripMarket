@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
 import 'dart:convert';
@@ -9,7 +11,7 @@ class Trip {
   late int duration;
   late DateTime createAt;
   late String uid;
-  late Map<String, List<dynamic>> planOfDay;
+  late Map<String, dynamic> planOfDay;
 
   Trip({
     required this.docName,
@@ -48,7 +50,7 @@ class Trip {
     int? duration,
     DateTime? createAt,
     String? uid,
-    Map<String, List<dynamic>>? planOfDay,
+    Map<String, dynamic>? planOfDay,
   }) =>
       Trip(
         docName: docName ?? this.docName,

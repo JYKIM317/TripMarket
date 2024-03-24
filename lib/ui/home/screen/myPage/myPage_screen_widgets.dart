@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_market/CustomIcon.dart';
+import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/ui/settings/settings_page.dart';
 import 'package:trip_market/ui/home/screen/myPage/editMyProfile/editMyProfile_page.dart';
 import 'package:trip_market/ui/trip/planMyTrip/planMyTrip_page.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/model/user_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MyPageScreenWidgets {
   Widget myProfile() {
@@ -286,7 +288,7 @@ class MyPageScreenWidgets {
         return Container(
           width: double.infinity,
           height: 260,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -310,10 +312,15 @@ class MyPageScreenWidgets {
   Widget myTravelPlans() {
     return Consumer(
       builder: (context, ref, child) {
+        List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
+        if (myTripList == null) {
+          ref.read(myTripListProvider).fetchMyTripList();
+          return loadingMyTrip(context);
+        }
         return Container(
           width: double.infinity,
           height: 260,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -337,7 +344,28 @@ class MyPageScreenWidgets {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              Expanded(
+                child: ListView.separated(
+                  physics: const ClampingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: myTripList.length,
+                  itemBuilder: (BuildContext ctx, int idx) {
+                    Trip thisTrip = myTripList[idx];
+                    return Container(
+                      height: double.infinity,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (ctx, idx) {
+                    return const SizedBox(width: 10);
+                  },
+                ),
+              ),
               //Remote Data Source Repository랑 연결
             ],
           ),
@@ -352,7 +380,7 @@ class MyPageScreenWidgets {
         return Container(
           width: double.infinity,
           height: 260,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -394,82 +422,148 @@ Widget loadingProfile(BuildContext context) {
     width: double.infinity,
     height: 120,
     padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Expanded(
-      child: Container(
-        height: double.infinity,
-        alignment: Alignment.centerLeft,
-        child: Row(
+    child: Container(
+      height: double.infinity,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    '',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    '',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.editProfile,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: Colors.grey,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget loadingMyTrip(BuildContext context) {
+  return Container(
+    width: double.infinity,
+    height: 260,
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(8),
+            Text(
+              AppLocalizations.of(context)!.travelPlansYouHave,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 21,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      '',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Text(
-                      '',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.editProfile,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.grey,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.black,
+                size: 21,
               ),
             ),
           ],
         ),
-      ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            children: [
+              Container(
+                width: 300,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Container(
+                width: 300,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 20),
+              Container(
+                width: 300,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

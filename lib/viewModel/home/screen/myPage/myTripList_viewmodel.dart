@@ -19,9 +19,14 @@ class MyTripListViewModel extends ChangeNotifier {
     }
   }
 
-  addMyTripList({required Trip trip}) {
+  Future<void> addMyTripList({required Trip trip}) async {
     _tripList ?? [];
     _tripList!.add(trip);
     notifyListeners();
+    try {
+      await FirestoreRepository().saveTrip(trip: trip);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

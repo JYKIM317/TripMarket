@@ -48,8 +48,6 @@ class TripViewModel extends ChangeNotifier {
         }
       }
     }
-    print('initial: ${trip!.planOfDay}');
-    print('modify: ${modifyData}');
 
     Trip convertTrip = trip!.copyWith(planOfDay: modifyData);
 
