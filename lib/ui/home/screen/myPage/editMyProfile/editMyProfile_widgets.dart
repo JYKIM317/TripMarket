@@ -22,20 +22,23 @@ class EditMyProfileWidgets {
               ),
             ),
             const SizedBox(height: 10),
-            Container(
-              width: MediaQuery.of(context).size.width / 2,
-              height: MediaQuery.of(context).size.width / 2,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(8),
+            Hero(
+              tag: 'profile',
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                height: MediaQuery.of(context).size.width / 2,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                clipBehavior: Clip.hardEdge,
+                child: profile.profileImage != null
+                    ? Image.memory(
+                        base64Decode(profile.profileImage!),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
-              clipBehavior: Clip.hardEdge,
-              child: profile.profileImage != null
-                  ? Image.memory(
-                      base64Decode(profile.profileImage!),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
             )
           ],
         );

@@ -30,5 +30,8 @@
     "selectThisLocation": "Select this location",
     "addPlace": "Add place",
     "saveSucceed": "Save succeed",
-    "saveFailed": "Save failed"
+    "saveFailed": "Save failed",
+    "areYouSureRemove": "Are you sure you want to remove this trip?",
+    "remove": "Remove",
+    "cancel": "Cancel"
 }

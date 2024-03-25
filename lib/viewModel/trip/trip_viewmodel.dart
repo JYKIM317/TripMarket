@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/data/repository/garllery/garllery_repository.dart';
 import 'package:trip_market/model/trip_model.dart';
+import 'package:trip_market/provider/myPage_provider.dart';
 
 class TripViewModel extends ChangeNotifier {
   FirestoreRepository repository;
@@ -22,11 +24,9 @@ class TripViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> requestSaveMyPlan() async {
+  Future<bool> requestSaveMyPlan(WidgetRef ref) async {
     bool result = false;
-
-    Map<String, List<dynamic>> modifyData = Map.from(trip!.planOfDay);
-
+    Map<String, dynamic> modifyData = Map.from(trip!.planOfDay);
     List<String> plans = modifyData.keys.toList();
     for (String plan in plans) {
       List<dynamic> eachDay = List.from(modifyData[plan]!);
@@ -35,24 +35,25 @@ class TripViewModel extends ChangeNotifier {
         Map<String, dynamic> eachPlan = Map.from(eachDay[i]);
         File? imageFile = eachPlan['image'];
         String imageName = '${_trip!.docName}-$plan-$i';
-        if (imageFile != null && imageFile.runtimeType == File) {
+        if (imageFile != null && imageFile.runtimeType != String) {
           String imageUrl =
               await RemoteGarlleryRepository().uploadAndGetImageUrl(
             imageName: imageName,
             imageFile: imageFile,
           );
-
           eachPlan['image'] = imageUrl;
           eachDay[i] = eachPlan;
           modifyData[plan] = eachDay;
         }
       }
     }
-
     Trip convertTrip = trip!.copyWith(planOfDay: modifyData);
 
     try {
-      await FirestoreRepository().saveTrip(trip: convertTrip).then((value) {
+      await ref
+          .read(myTripListProvider)
+          .addMyTripList(trip: convertTrip)
+          .then((_) {
         result = true;
       });
     } catch (e) {

@@ -24,7 +24,7 @@ class MyPageScreen extends ConsumerWidget {
               height: 16,
               color: Colors.grey[100],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             MyPageScreenWidgets().recentWatch(),
             const SizedBox(height: 10),
             MyPageScreenWidgets().myTravelPlans(),

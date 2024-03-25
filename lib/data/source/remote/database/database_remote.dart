@@ -49,6 +49,19 @@ class FirestoreRemote {
     await firestoreAddress.set(json);
   }
 
+  Future<void> removeTripAtFirestore({
+    required String uid,
+    required String docName,
+  }) async {
+    DocumentReference firestoreAddress = FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection('myTrip')
+        .doc(docName);
+
+    await firestoreAddress.delete();
+  }
+
   Future<QuerySnapshot?> getMyTripFromFirestore({required String uid}) async {
     CollectionReference firestoreAddress = FirebaseFirestore.instance
         .collection('user')

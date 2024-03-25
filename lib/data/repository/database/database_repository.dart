@@ -50,6 +50,13 @@ class FirestoreRepository {
     await FirestoreRemote().saveTripToFirestore(uid: userUID, json: json);
   }
 
+  Future<void> removeTrip({required String docName}) async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+
+    await FirestoreRemote()
+        .removeTripAtFirestore(uid: userUID, docName: docName);
+  }
+
   Future<List<Trip>> getUserTrip() async {
     String userUID = FirebaseAuth.instance.currentUser!.uid;
     List<Trip> myTripList = [];

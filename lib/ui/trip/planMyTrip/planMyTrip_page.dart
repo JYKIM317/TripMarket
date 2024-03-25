@@ -6,6 +6,8 @@ import 'package:trip_market/CustomIcon.dart';
 import 'package:trip_market/viewModel/trip/planMyTrip_viewmodel.dart';
 import 'package:trip_market/ui/trip/planMyTrip/selectPlaceMapView_page.dart';
 import 'package:trip_market/model/trip_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 part 'planMyTrip_widgets.dart';
 
@@ -14,7 +16,7 @@ class PlanMyTripPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Trip planData = ref.watch(tripProvider).trip!;
+    Trip planData = ref.read(tripProvider).trip!;
     return PopScope(
       canPop: false,
       child: GestureDetector(
@@ -42,9 +44,10 @@ class PlanMyTripPage extends ConsumerWidget {
                 child: TextButton(
                   onPressed: () async {
                     //save
-                    await ref.read(tripProvider).requestSaveMyPlan().then(
-                      (result) {
-                        showDialog(
+                    if (planData.planOfDay.isNotEmpty) {
+                      await ref.read(tripProvider).requestSaveMyPlan(ref).then(
+                        (result) {
+                          showDialog(
                             context: context,
                             builder: (BuildContext context2) {
                               return AlertDialog(
@@ -54,9 +57,11 @@ class PlanMyTripPage extends ConsumerWidget {
                                     : Text(AppLocalizations.of(context)!
                                         .saveFailed),
                               );
-                            });
-                      },
-                    );
+                            },
+                          );
+                        },
+                      );
+                    }
                   },
                   child: Text(
                     AppLocalizations.of(context)!.save,
@@ -79,42 +84,7 @@ class PlanMyTripPage extends ConsumerWidget {
                 TripTitleWidget(),
                 const SizedBox(height: 20),
                 //Destination
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.destination,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white70,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        planData.nation,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
+                PlanMyTripWidgets().destinationWidget(),
                 const SizedBox(height: 20),
                 //Trip duration
                 TripDurationWidget(),
