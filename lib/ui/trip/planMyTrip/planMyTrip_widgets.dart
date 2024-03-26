@@ -166,7 +166,8 @@ class _TripDurationWidgetState extends ConsumerState<TripDurationWidget> {
 //
 
 class TripTitleWidget extends ConsumerStatefulWidget {
-  const TripTitleWidget({super.key});
+  final String title;
+  const TripTitleWidget({super.key, required this.title});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -175,6 +176,14 @@ class TripTitleWidget extends ConsumerStatefulWidget {
 
 class _TripTitleWidgetState extends ConsumerState<TripTitleWidget> {
   TextEditingController titleController = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.title != '') {
+      titleController.text = widget.title;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +232,8 @@ class _TripTitleWidgetState extends ConsumerState<TripTitleWidget> {
 //
 
 class PlanOfDaysWidget extends ConsumerStatefulWidget {
-  const PlanOfDaysWidget({super.key});
+  final Map<dynamic, List<TextEditingController>>? controllers;
+  const PlanOfDaysWidget({super.key, this.controllers});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -232,6 +242,15 @@ class PlanOfDaysWidget extends ConsumerStatefulWidget {
 
 class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
   Map<dynamic, List<TextEditingController>> detailControllers = {};
+
+  @override
+  void initState() {
+    if (widget.controllers != null) {
+      detailControllers = widget.controllers!;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Trip planData = ref.watch(tripProvider).trip!;

@@ -1,12 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:trip_market/model/user_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/CustomIcon.dart';
 import 'package:trip_market/model/trip_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:trip_market/ui/trip/planMyTrip/planMyTrip_page.dart';
+import 'package:trip_market/viewModel/trip/planMyTrip_viewmodel.dart';
 
 part 'tripPlan_widgets.dart';
 
@@ -15,6 +17,8 @@ class TripPlanPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Trip thisTrip = ref.watch(tripProvider).trip!;
+    UserProfile profile = ref.watch(profileProvider).userProfile!;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -28,17 +32,29 @@ class TripPlanPage extends ConsumerWidget {
             ),
           ),
           actions: [
-            IconButton(
-              onPressed: () async {
-                //edit this trip
-                //navigator to planMyTrip Page with this Trip
-              },
-              icon: const FaIcon(
-                FontAwesomeIcons.solidPenToSquare,
-                color: Colors.black,
-                size: 21,
+            if (thisTrip.uid == profile.uid)
+              IconButton(
+                onPressed: () async {
+                  //edit this trip
+                  //navigator to planMyTrip Page with this Trip
+                  Map<dynamic, List<TextEditingController>> controllers =
+                      PlanMyTripViewModel()
+                          .textEditingControllerGenerator(thisTrip.planOfDay);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PlanMyTripPage(controllers: controllers),
+                    ),
+                  );
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.solidPenToSquare,
+                  color: Colors.black,
+                  size: 21,
+                ),
               ),
-            ),
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: IconButton(

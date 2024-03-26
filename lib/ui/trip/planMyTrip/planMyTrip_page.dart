@@ -12,7 +12,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 part 'planMyTrip_widgets.dart';
 
 class PlanMyTripPage extends ConsumerWidget {
-  const PlanMyTripPage({super.key});
+  final Map<dynamic, List<TextEditingController>>? controllers;
+  const PlanMyTripPage({
+    super.key,
+    this.controllers,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +85,7 @@ class PlanMyTripPage extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //Trip title
-                TripTitleWidget(),
+                TripTitleWidget(title: planData.title),
                 const SizedBox(height: 20),
                 //Destination
                 PlanMyTripWidgets().destinationWidget(),
@@ -95,7 +99,7 @@ class PlanMyTripPage extends ConsumerWidget {
                   thickness: 2,
                 ),
                 //Trip Planner
-                PlanOfDaysWidget(),
+                PlanOfDaysWidget(controllers: controllers),
               ],
             ),
           ),
