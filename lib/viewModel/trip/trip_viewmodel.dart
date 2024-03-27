@@ -33,7 +33,7 @@ class TripViewModel extends ChangeNotifier {
       int count = eachDay.length;
       for (int i = 0; i < count; i++) {
         Map<String, dynamic> eachPlan = Map.from(eachDay[i]);
-        File? imageFile = eachPlan['image'];
+        var imageFile = eachPlan['image'];
         String imageName = '${_trip!.docName}-$plan-$i';
         if (imageFile != null && imageFile.runtimeType != String) {
           String imageUrl =
