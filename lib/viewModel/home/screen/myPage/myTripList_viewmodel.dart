@@ -19,10 +19,17 @@ class MyTripListViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addMyTripList({required Trip trip}) async {
+  Future<void> addMyTripList({
+    required Trip trip,
+    bool? modify,
+  }) async {
     _tripList ?? [];
-    _tripList!.insert(0, trip);
-    notifyListeners();
+    modify ?? false;
+    if (!modify!) {
+      _tripList!.insert(0, trip);
+      notifyListeners();
+    }
+
     try {
       await FirestoreRepository().saveTrip(trip: trip);
     } catch (e) {

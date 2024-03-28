@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trip_market/ui/trip/planMyTrip/planMyTrip_page.dart';
 import 'package:trip_market/viewModel/trip/planMyTrip_viewmodel.dart';
+import 'package:trip_market/ui/fullScreenImage/fullScreenImage_page.dart';
 
 part 'tripPlan_widgets.dart';
 
@@ -44,8 +45,10 @@ class TripPlanPage extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PlanMyTripPage(controllers: controllers),
+                      builder: (context) => PlanMyTripPage(
+                        controllers: controllers,
+                        modify: true,
+                      ),
                     ),
                   );
                 },

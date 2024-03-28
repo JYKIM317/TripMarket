@@ -366,7 +366,8 @@ class MyPageScreenWidgets {
                   itemCount: myTripList.length,
                   itemBuilder: (BuildContext ctx, int idx) {
                     Trip thisTrip = myTripList[idx];
-                    String? thisImage = thisTrip.planOfDay['0'][0]['image'];
+                    var thisImage = thisTrip.planOfDay['0'][0]['image'];
+                    bool isFile = thisImage.runtimeType != String;
                     return InkWell(
                       onTap: () {
                         // Navigator to TripPlan Page
@@ -403,20 +404,26 @@ class MyPageScreenWidgets {
                                   ? SizedBox(
                                       width: double.infinity,
                                       height: double.infinity,
-                                      child: CachedNetworkImage(
-                                        imageUrl: thisTrip.planOfDay['0'][0]
-                                            ['image'],
-                                        imageBuilder: (context, imageProvider) {
-                                          return Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover,
-                                              ),
+                                      child: isFile
+                                          ? Image.file(
+                                              thisImage,
+                                              fit: BoxFit.cover,
+                                            )
+                                          : CachedNetworkImage(
+                                              imageUrl: thisTrip.planOfDay['0']
+                                                  [0]['image'],
+                                              imageBuilder:
+                                                  (context, imageProvider) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                          );
-                                        },
-                                      ),
                                     )
                                   : const Center(
                                       child: Icon(

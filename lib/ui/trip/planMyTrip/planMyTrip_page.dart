@@ -13,9 +13,11 @@ part 'planMyTrip_widgets.dart';
 
 class PlanMyTripPage extends ConsumerWidget {
   final Map<dynamic, List<TextEditingController>>? controllers;
+  final bool? modify;
   const PlanMyTripPage({
     super.key,
     this.controllers,
+    this.modify,
   });
 
   @override
@@ -49,7 +51,13 @@ class PlanMyTripPage extends ConsumerWidget {
                   onPressed: () async {
                     //save
                     if (planData.planOfDay.isNotEmpty) {
-                      await ref.read(tripProvider).requestSaveMyPlan(ref).then(
+                      await ref
+                          .read(tripProvider)
+                          .requestSaveMyPlan(
+                            ref: ref,
+                            modify: modify,
+                          )
+                          .then(
                         (result) {
                           showDialog(
                             context: context,

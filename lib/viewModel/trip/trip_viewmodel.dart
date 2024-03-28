@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trip_market/data/repository/database/database_repository.dart';
@@ -24,7 +23,10 @@ class TripViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> requestSaveMyPlan(WidgetRef ref) async {
+  Future<bool> requestSaveMyPlan({
+    required WidgetRef ref,
+    bool? modify,
+  }) async {
     bool result = false;
     Map<String, dynamic> modifyData = Map.from(trip!.planOfDay);
     List<String> plans = modifyData.keys.toList();
@@ -52,7 +54,10 @@ class TripViewModel extends ChangeNotifier {
     try {
       await ref
           .read(myTripListProvider)
-          .addMyTripList(trip: convertTrip)
+          .addMyTripList(
+            trip: convertTrip,
+            modify: modify,
+          )
           .then((_) {
         result = true;
       });

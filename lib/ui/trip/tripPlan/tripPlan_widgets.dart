@@ -151,6 +151,7 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
           itemBuilder: (BuildContext ctx2, int idx2) {
             double minHeight = MediaQuery.of(context).size.width - 32;
             var thisImage = planOfDaySchedule['$selectedDay']![idx2]['image'];
+            bool isFile = thisImage.runtimeType != String;
             bool isThumbnail = selectedDay == 0 && idx2 == 0;
             return Container(
               width: double.infinity,
@@ -176,6 +177,17 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                   InkWell(
                     onTap: () async {
                       //full screen image
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenImagePage(
+                            thisImageTag: isThumbnail
+                                ? planData.docName
+                                : '${selectedDay}_$idx2',
+                            thisImage: thisImage,
+                          ),
+                        ),
+                      );
                     },
                     child: Hero(
                       tag: isThumbnail
@@ -194,19 +206,24 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                                   color: Colors.white,
                                 ),
                               )
-                            : CachedNetworkImage(
-                                imageUrl: thisImage,
-                                imageBuilder: (context, imageProvider) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                            : isFile
+                                ? Image.file(
+                                    thisImage,
+                                    fit: BoxFit.cover,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: thisImage,
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                       ),
                     ),
                   ),
