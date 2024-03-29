@@ -19,6 +19,7 @@ class TripPlanPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Trip thisTrip = ref.watch(tripProvider).trip!;
+    List<Trip> myTripList = ref.watch(myTripListProvider).tripList ?? [];
     UserProfile profile = ref.watch(profileProvider).userProfile!;
     return Scaffold(
         backgroundColor: Colors.white,
@@ -33,76 +34,98 @@ class TripPlanPage extends ConsumerWidget {
             ),
           ),
           actions: [
+            //edit trip button
             if (thisTrip.uid == profile.uid)
-              IconButton(
-                onPressed: () async {
-                  //edit this trip
-                  //navigator to planMyTrip Page with this Trip
-                  Map<dynamic, List<TextEditingController>> controllers =
-                      PlanMyTripViewModel()
-                          .textEditingControllerGenerator(thisTrip.planOfDay);
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IconButton(
+                  onPressed: () async {
+                    //edit this trip
+                    //navigator to planMyTrip Page with this Trip
+                    Map<dynamic, List<TextEditingController>> controllers =
+                        PlanMyTripViewModel()
+                            .textEditingControllerGenerator(thisTrip.planOfDay);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PlanMyTripPage(
-                        controllers: controllers,
-                        modify: true,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlanMyTripPage(
+                          controllers: controllers,
+                          modify: true,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.solidPenToSquare,
-                  color: Colors.black,
-                  size: 21,
+                    );
+                  },
+                  icon: const FaIcon(
+                    FontAwesomeIcons.solidPenToSquare,
+                    color: Colors.black,
+                    size: 21,
+                  ),
                 ),
               ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: IconButton(
-                onPressed: () async {
-                  //remove this trip
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context2) {
-                      return AlertDialog(
-                        content: Text(
-                            AppLocalizations.of(context)!.areYouSureRemove),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context2);
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.cancel,
-                              style: const TextStyle(color: Colors.black),
+            //remove trip button
+            if (myTripList.contains(thisTrip))
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IconButton(
+                  onPressed: () async {
+                    //remove this trip
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context2) {
+                        return AlertDialog(
+                          content: Text(
+                              AppLocalizations.of(context)!.areYouSureRemove),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context2);
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                                style: const TextStyle(color: Colors.black),
+                              ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              ref.read(myTripListProvider).removeAtMyTripList(
-                                  trip: ref.read(tripProvider).trip!);
-                              Navigator.pop(context2);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              AppLocalizations.of(context)!.remove,
-                              style: const TextStyle(color: Colors.red),
+                            TextButton(
+                              onPressed: () {
+                                ref.read(myTripListProvider).removeAtMyTripList(
+                                    trip: ref.read(tripProvider).trip!);
+                                Navigator.pop(context2);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.remove,
+                                style: const TextStyle(color: Colors.red),
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                icon: const FaIcon(
-                  FontAwesomeIcons.trash,
-                  color: Colors.black,
-                  size: 21,
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const FaIcon(
+                    FontAwesomeIcons.trash,
+                    color: Colors.black,
+                    size: 21,
+                  ),
                 ),
               ),
-            )
+            //favorite trip button
+            if (!myTripList.contains(thisTrip) || thisTrip.uid == profile.uid)
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IconButton(
+                  onPressed: () async {
+                    //favorite add or remove logic
+                  },
+                  icon: const FaIcon(
+                    //if this trip contains in favorite list, reveal solidHeart else heart
+                    FontAwesomeIcons.heart,
+                    color: Colors.red,
+                    size: 21,
+                  ),
+                ),
+              ),
           ],
           elevation: 0,
           backgroundColor: Colors.white,

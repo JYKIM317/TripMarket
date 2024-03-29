@@ -2,12 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:trip_market/data/source/local/garllery/garllery_local.dart';
-import 'package:trip_market/data/source/remote/garllery/garllery_remote.dart';
+import 'package:trip_market/data/source/local/gallery/gallery_local.dart';
+import 'package:trip_market/data/source/remote/gallery/gallery_remote.dart';
 
 class LocalGarlleryRepository {
   Future<XFile?> getImageFile() async {
-    XFile? selectedImage = await LocalGarllery().getImageFromGarllery();
+    XFile? selectedImage = await LocalGarllery().getImageFromGallery();
 
     return selectedImage;
   }

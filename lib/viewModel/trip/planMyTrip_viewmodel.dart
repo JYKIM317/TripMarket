@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:trip_market/data/repository/garllery/garllery_repository.dart';
+import 'package:trip_market/data/repository/gallery/gallery_repository.dart';
 import 'package:trip_market/data/repository/location/location_repository.dart';
 
 class PlanMyTripViewModel {

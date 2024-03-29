@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:trip_market/data/repository/garllery/garllery_repository.dart';
+import 'package:trip_market/data/repository/gallery/gallery_repository.dart';
 import 'package:trip_market/data/repository/location/location_repository.dart';
 import 'package:trip_market/model/user_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';

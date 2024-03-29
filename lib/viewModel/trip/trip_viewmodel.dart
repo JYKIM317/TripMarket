@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:trip_market/data/repository/database/database_repository.dart';
-import 'package:trip_market/data/repository/garllery/garllery_repository.dart';
+import 'package:trip_market/data/repository/gallery/gallery_repository.dart';
 import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 
