@@ -82,27 +82,30 @@ class MyTripPostPage extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      child: thisImage != null
-                          ? CachedNetworkImage(
-                              imageUrl: thisTrip.planOfDay['0'][0]['image'],
-                              imageBuilder: (context, imageProvider) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
+                      child: Hero(
+                        tag: thisTrip.docName,
+                        child: thisImage != null
+                            ? CachedNetworkImage(
+                                imageUrl: thisTrip.planOfDay['0'][0]['image'],
+                                imageBuilder: (context, imageProvider) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            )
-                          : Center(
-                              child: Icon(
-                                Icons.image,
-                                size: imageWidth / 5,
-                                color: Colors.white,
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Icon(
+                                  Icons.image,
+                                  size: imageWidth / 5,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                     SizedBox(
                       width: double.infinity,
