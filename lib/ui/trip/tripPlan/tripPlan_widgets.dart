@@ -177,17 +177,19 @@ class _PlanOfDaysWidgetState extends ConsumerState<PlanOfDaysWidget> {
                   InkWell(
                     onTap: () async {
                       //full screen image
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FullScreenImagePage(
-                            thisImageTag: isThumbnail
-                                ? planData.docName
-                                : '${selectedDay}_$idx2',
-                            thisImage: thisImage,
+                      if (thisImage != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FullScreenImagePage(
+                              thisImageTag: isThumbnail
+                                  ? planData.docName
+                                  : '${selectedDay}_$idx2',
+                              thisImage: thisImage,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                     child: Hero(
                       tag: isThumbnail
