@@ -111,7 +111,7 @@ class TripPlanPage extends ConsumerWidget {
                 ),
               ),
             //favorite trip button
-            if (!myTripList.contains(thisTrip) || thisTrip.uid == profile.uid)
+            if (!myTripList.contains(thisTrip) && thisTrip.uid != profile.uid)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(

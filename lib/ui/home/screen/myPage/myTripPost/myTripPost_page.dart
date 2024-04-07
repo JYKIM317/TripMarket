@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,13 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
 
-class OwnTripListPage extends ConsumerWidget {
-  const OwnTripListPage({super.key});
+class MyTripPostPage extends ConsumerWidget {
+  const MyTripPostPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
     List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
-    myTripList ?? ref.read(myTripListProvider).fetchMyTripList();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -27,7 +28,7 @@ class OwnTripListPage extends ConsumerWidget {
         ),
         titleSpacing: 0,
         title: Text(
-          AppLocalizations.of(context)!.travelPlansYouHave,
+          AppLocalizations.of(context)!.myPost,
           style: const TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -38,13 +39,16 @@ class OwnTripListPage extends ConsumerWidget {
         height: double.infinity,
         child: ListView.separated(
           physics: const ClampingScrollPhysics(),
-          itemCount: myTripList?.length ?? 0,
+          itemCount: myTripList!.length,
           padding: const EdgeInsets.fromLTRB(16, 44, 16, 34),
           itemBuilder: (BuildContext ctx, int idx) {
-            Trip thisTrip = myTripList![idx];
+            Trip thisTrip = myTripList[idx];
             String? thisImage = thisTrip.planOfDay['0'][0]['image'];
             double imageWidth = (MediaQuery.sizeOf(context).width - 32);
             double imageHeight = imageWidth * 0.7;
+            if (uid != thisTrip.uid) {
+              return const SizedBox(height: 0);
+            }
             return InkWell(
               onTap: () {
                 // Navigator to TripPlan Page
@@ -78,30 +82,27 @@ class OwnTripListPage extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      child: Hero(
-                        tag: thisTrip.docName,
-                        child: thisImage != null
-                            ? CachedNetworkImage(
-                                imageUrl: thisTrip.planOfDay['0'][0]['image'],
-                                imageBuilder: (context, imageProvider) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
+                      child: thisImage != null
+                          ? CachedNetworkImage(
+                              imageUrl: thisTrip.planOfDay['0'][0]['image'],
+                              imageBuilder: (context, imageProvider) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
                                     ),
-                                  );
-                                },
-                              )
-                            : Center(
-                                child: Icon(
-                                  Icons.image,
-                                  size: imageWidth / 5,
-                                  color: Colors.white,
-                                ),
+                                  ),
+                                );
+                              },
+                            )
+                          : Center(
+                              child: Icon(
+                                Icons.image,
+                                size: imageWidth / 5,
+                                color: Colors.white,
                               ),
-                      ),
+                            ),
                     ),
                     SizedBox(
                       width: double.infinity,
@@ -153,6 +154,10 @@ class OwnTripListPage extends ConsumerWidget {
             );
           },
           separatorBuilder: (ctx, idx) {
+            Trip thisTrip = myTripList[idx];
+            if (uid != thisTrip.uid) {
+              return const SizedBox(height: 0);
+            }
             return const SizedBox(height: 20);
           },
         ),

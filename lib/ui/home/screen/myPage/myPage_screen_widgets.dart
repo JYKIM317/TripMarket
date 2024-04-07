@@ -12,6 +12,7 @@ import 'package:trip_market/model/user_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trip_market/ui/home/screen/myPage/ownTripList/ownTripList_page.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
+import 'package:trip_market/ui/home/screen/myPage/myTripPost/myTripPost_page.dart';
 
 class MyPageScreenWidgets {
   Widget myProfile() {
@@ -228,7 +229,14 @@ class MyPageScreenWidgets {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyTripPostPage(),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
