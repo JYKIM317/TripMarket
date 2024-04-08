@@ -70,4 +70,15 @@ class FirestoreRemote {
 
     return await firestoreAddress.get();
   }
+
+  Future<DocumentSnapshot?> getMyPostedTripFromFirestore(
+      {required String uid}) async {
+    DocumentReference firestoreAddress = FirebaseFirestore.instance
+        .collection('user')
+        .doc(uid)
+        .collection('myPost')
+        .doc('trip');
+
+    return await firestoreAddress.get();
+  }
 }

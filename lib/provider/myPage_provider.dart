@@ -3,6 +3,7 @@ import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/userProfile_viewmodel.dart';
 import 'package:trip_market/viewModel/trip/trip_viewmodel.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/myTripList_viewmodel.dart';
+import 'package:trip_market/viewModel/home/screen/myPage/myPost/myPost_viewmodel.dart';
 
 final firestoreRepositoryProvider = Provider((ref) => FirestoreRepository());
 
@@ -32,3 +33,7 @@ class PlanOfDaysIndexNotifier extends StateNotifier<int?> {
     state = index;
   }
 }
+
+final postProvider = ChangeNotifierProvider<MyPostViewModel>((ref) {
+  return MyPostViewModel(ref.watch(firestoreRepositoryProvider));
+});

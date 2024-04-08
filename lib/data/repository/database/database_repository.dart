@@ -79,4 +79,19 @@ class FirestoreRepository {
 
     return myTripList;
   }
+
+  Future<List<String>> getMyPostedTripDocNameList() async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+    List<String> postedDocList = [];
+    await FirestoreRemote()
+        .getMyPostedTripFromFirestore(uid: userUID)
+        .then((snapshot) {
+      Map<String, dynamic>? docList = snapshot?.data() as Map<String, dynamic>?;
+      if (docList != null) {
+        postedDocList.addAll(docList['docList']);
+      }
+    });
+
+    return postedDocList;
+  }
 }
