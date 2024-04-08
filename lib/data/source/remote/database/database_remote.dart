@@ -67,7 +67,7 @@ class FirestoreTripRemote {
 
 class FirestorePostRemote {
   Future<DocumentSnapshot?> getUserPostedTrip({required String uid}) async {
-    final String address = 'user/$uid/myPost/trip';
+    final String address = '$uid/myPost/trip';
 
     return await FirestoreUserDocumentRemote(address: address)
         .getUserDocumentData();
