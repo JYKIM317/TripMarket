@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trip_market/data/source/remote/database/firestore_user_remote.dart';
+import 'package:trip_market/data/source/remote/database/firestore/firestore_user_remote.dart';
 
 class FirestoreUserProfileRemote {
   Future<DocumentSnapshot?> getUserProfileDoc({required String uid}) async {

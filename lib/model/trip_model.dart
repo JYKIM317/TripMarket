@@ -10,6 +10,7 @@ class Trip {
   late DateTime createAt;
   late String uid;
   late Map<String, dynamic> planOfDay;
+  late List<dynamic> tag;
 
   Trip({
     required this.docName,
@@ -19,6 +20,7 @@ class Trip {
     required this.createAt,
     required this.uid,
     required this.planOfDay,
+    required this.tag,
   });
 
   Trip.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Trip {
     createAt = json['createAt'].toDate();
     uid = json['uid'];
     planOfDay = jsonDecode(json['planOfDay']);
+    tag = json['tag'];
   }
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +42,7 @@ class Trip {
         'createAt': createAt,
         'uid': uid,
         'planOfDay': jsonEncode(planOfDay),
+        'tag': tag,
       };
 
   Trip copyWith({
@@ -49,6 +53,7 @@ class Trip {
     DateTime? createAt,
     String? uid,
     Map<String, dynamic>? planOfDay,
+    List<dynamic>? tag,
   }) =>
       Trip(
         docName: docName ?? this.docName,
@@ -58,6 +63,7 @@ class Trip {
         createAt: createAt ?? this.createAt,
         uid: uid ?? this.uid,
         planOfDay: planOfDay ?? this.planOfDay,
+        tag: tag ?? this.tag,
       );
 
   factory Trip.initial({required String nation}) => Trip(
@@ -68,5 +74,6 @@ class Trip {
         createAt: DateTime.now(),
         uid: FirebaseAuth.instance.currentUser!.uid,
         planOfDay: {},
+        tag: [],
       );
 }
