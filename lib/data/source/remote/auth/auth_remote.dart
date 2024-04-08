@@ -21,8 +21,10 @@ class AuthRemote {
     required String rawNonce,
     required String nonce,
   }) async {
-    String redirectionURL =
+    const String redirectionURL =
         "https://foregoing-halved-falcon.glitch.me/callbacks/sign_in_with_apple";
+    const String appleURL = "apple.com";
+
     String clientId = "tripmarket.delivalue.com";
 
     AuthorizationCredentialAppleID appleCredential =
@@ -38,7 +40,7 @@ class AuthRemote {
       nonce: nonce,
     );
 
-    OAuthCredential oauthCredential = OAuthProvider("apple.com").credential(
+    OAuthCredential oauthCredential = OAuthProvider(appleURL).credential(
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
       rawNonce: rawNonce,
