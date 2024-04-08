@@ -1,84 +1,75 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trip_market/model/user_model.dart';
+import 'package:trip_market/data/source/remote/database/firestore_user_remote.dart';
 
-class FirestoreRemote {
-  Future<UserProfile> getUserProfileFromFirestore({required String uid}) async {
-    final firestoreAddress =
-        FirebaseFirestore.instance.collection('user').doc(uid);
-    DocumentSnapshot doc = await firestoreAddress.get();
-    Map<String, dynamic> jsonData = doc.data() as Map<String, dynamic>;
+class FirestoreUserProfileRemote {
+  Future<DocumentSnapshot?> getUserProfileDoc({required String uid}) async {
+    final String address = uid;
 
-    return UserProfile.fromJson(jsonData);
+    return await FirestoreUserDocumentRemote(address: address)
+        .getUserDocumentData();
   }
 
-  Future<void> updateUserProfileToFirestore({
+  Future<void> setUserProfileDoc({required Map<String, dynamic> json}) async {
+    final String address = json['uid'];
+
+    await FirestoreUserDocumentRemote(address: address)
+        .setUserDocumentData(json: json);
+  }
+
+  Future<void> updateUserProfileDoc({
     required Map<String, dynamic> json,
   }) async {
-    DocumentReference firestoreAddress =
-        FirebaseFirestore.instance.collection('user').doc(json['uid']);
+    final String address = json['uid'];
 
-    await firestoreAddress.update(json);
+    await FirestoreUserDocumentRemote(address: address)
+        .updateUserDocumentData(json: json);
   }
+}
 
-  Future<void> setUserProfileToFirestore({
-    required Map<String, dynamic> json,
-  }) async {
-    DocumentReference firestoreAddress =
-        FirebaseFirestore.instance.collection('user').doc(json['uid']);
+class FirestoreLoginHistoryRemote {
+  Future<void> updateUserLastLoginHistory(
+      {required Map<String, dynamic> json}) async {
+    final String address = json['uid'];
 
-    await firestoreAddress.set(json);
+    await FirestoreUserDocumentRemote(address: address)
+        .updateUserDocumentData(json: json);
   }
+}
 
-  Future<void> updateLastLogin({required Map<String, dynamic> data}) async {
-    DocumentReference firestoreAddress =
-        FirebaseFirestore.instance.collection('user').doc(data['uid']);
-
-    await firestoreAddress.update(data);
-  }
-
-  Future<void> saveTripToFirestore({
+class FirestoreTripRemote {
+  Future<void> saveMyTripDoc({
     required String uid,
     required Map<String, dynamic> json,
   }) async {
-    DocumentReference firestoreAddress = FirebaseFirestore.instance
-        .collection('user')
-        .doc(uid)
-        .collection('myTrip')
-        .doc(json['docName']);
+    final String address = '$uid/myTrip/${json['docName']}';
 
-    await firestoreAddress.set(json);
+    await FirestoreUserDocumentRemote(address: address)
+        .setUserDocumentData(json: json);
   }
 
-  Future<void> removeTripAtFirestore({
+  Future<void> deleteMyTripDoc({
     required String uid,
     required String docName,
   }) async {
-    DocumentReference firestoreAddress = FirebaseFirestore.instance
-        .collection('user')
-        .doc(uid)
-        .collection('myTrip')
-        .doc(docName);
+    final String address = '$uid/myTrip/$docName';
 
-    await firestoreAddress.delete();
+    await FirestoreUserDocumentRemote(address: address)
+        .deleteUserDocumentData();
   }
 
-  Future<QuerySnapshot?> getMyTripFromFirestore({required String uid}) async {
-    CollectionReference firestoreAddress = FirebaseFirestore.instance
-        .collection('user')
-        .doc(uid)
-        .collection('myTrip');
+  Future<QuerySnapshot?> getUserTripList({required String uid}) async {
+    final String address = 'user/$uid/myTrip';
 
-    return await firestoreAddress.get();
+    return await FirestoreUserCollectionRemote(address: address)
+        .getUserCollectionDoc();
   }
+}
 
-  Future<DocumentSnapshot?> getMyPostedTripFromFirestore(
-      {required String uid}) async {
-    DocumentReference firestoreAddress = FirebaseFirestore.instance
-        .collection('user')
-        .doc(uid)
-        .collection('myPost')
-        .doc('trip');
+class FirestorePostRemote {
+  Future<DocumentSnapshot?> getUserPostedTrip({required String uid}) async {
+    final String address = 'user/$uid/myPost/trip';
 
-    return await firestoreAddress.get();
+    return await FirestoreUserDocumentRemote(address: address)
+        .getUserDocumentData();
   }
 }

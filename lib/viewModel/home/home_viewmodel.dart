@@ -9,6 +9,6 @@ class HomeViewModel extends StateNotifier<int?> {
   }
 
   requestUpdateLastLoginHistory() {
-    FirestoreRepository().updateLastLoginHistory();
+    UpdateLoginHistoryRepository().toFirestore();
   }
 }

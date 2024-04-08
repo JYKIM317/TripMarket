@@ -3,16 +3,13 @@ import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/model/trip_model.dart';
 
 class MyTripListViewModel extends ChangeNotifier {
-  FirestoreRepository repository;
   List<Trip>? _tripList;
 
   List<Trip>? get tripList => _tripList;
 
-  MyTripListViewModel(this.repository);
-
   Future<void> fetchMyTripList() async {
     try {
-      _tripList = await repository.getUserTrip();
+      _tripList = await GetUserTripListRepository().fromFirestore();
       notifyListeners();
     } catch (e) {
       _tripList = [];
@@ -29,22 +26,13 @@ class MyTripListViewModel extends ChangeNotifier {
       _tripList!.insert(0, trip);
       notifyListeners();
     }
-
-    try {
-      await FirestoreRepository().saveTrip(trip: trip);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
   }
 
   Future<void> removeAtMyTripList({required Trip trip}) async {
     String docName = trip.docName;
     _tripList!.remove(trip);
     notifyListeners();
-    try {
-      await FirestoreRepository().removeTrip(docName: docName);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+
+    DeleteTripRepository().toFirestore(docName: docName);
   }
 }

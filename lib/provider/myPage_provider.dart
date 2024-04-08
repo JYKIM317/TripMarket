@@ -1,24 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:trip_market/data/repository/database/database_repository.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/userProfile_viewmodel.dart';
 import 'package:trip_market/viewModel/trip/trip_viewmodel.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/myTripList_viewmodel.dart';
 import 'package:trip_market/viewModel/home/screen/myPage/myPost/myPost_viewmodel.dart';
 
-final firestoreRepositoryProvider = Provider((ref) => FirestoreRepository());
-
 final profileProvider = ChangeNotifierProvider<UserProfileViewModel>((ref) {
-  return UserProfileViewModel(ref.watch(firestoreRepositoryProvider));
+  return UserProfileViewModel();
 });
 //
 
 final tripProvider = ChangeNotifierProvider<TripViewModel>((ref) {
-  return TripViewModel(ref.watch(firestoreRepositoryProvider));
+  return TripViewModel();
 });
 //
 
 final myTripListProvider = ChangeNotifierProvider<MyTripListViewModel>((ref) {
-  return MyTripListViewModel(ref.watch(firestoreRepositoryProvider));
+  return MyTripListViewModel();
 });
 
 final planOfDaysIndex =
@@ -35,5 +32,5 @@ class PlanOfDaysIndexNotifier extends StateNotifier<int?> {
 }
 
 final postProvider = ChangeNotifierProvider<MyPostViewModel>((ref) {
-  return MyPostViewModel(ref.watch(firestoreRepositoryProvider));
+  return MyPostViewModel();
 });

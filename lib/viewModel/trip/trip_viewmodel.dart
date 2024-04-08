@@ -6,12 +6,9 @@ import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart';
 
 class TripViewModel extends ChangeNotifier {
-  FirestoreRepository repository;
   Trip? _trip;
 
   Trip? get trip => _trip;
-
-  TripViewModel(this.repository);
 
   tripInitialization(String nation) {
     _trip = Trip.initial(nation: nation);
@@ -52,7 +49,8 @@ class TripViewModel extends ChangeNotifier {
     Trip convertTrip = trip!.copyWith(planOfDay: modifyData);
 
     try {
-      await ref
+      await SaveTripRepository().toFirestore(trip: convertTrip);
+      ref
           .read(myTripListProvider)
           .addMyTripList(
             trip: convertTrip,
