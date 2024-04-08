@@ -33,5 +33,9 @@
     "saveFailed": "Save failed",
     "areYouSureRemove": "Are you sure you want to remove this trip?",
     "remove": "Remove",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "postNotShared": "This post is not shared",
+    "postShared": "This post is shared",
+    "cancelSharing": "Cancel sharing",
+    "share": "Share"
 }
