@@ -43,7 +43,7 @@ class MyTripPostPage extends ConsumerWidget {
         child: ListView.separated(
           physics: const ClampingScrollPhysics(),
           itemCount: myTripList!.length,
-          padding: const EdgeInsets.fromLTRB(16, 44, 16, 34),
+          padding: const EdgeInsets.only(top: 44, bottom: 34),
           itemBuilder: (BuildContext ctx, int idx) {
             Trip thisTrip = myTripList[idx];
             String? thisImage = thisTrip.planOfDay['0'][0]['image'];
@@ -54,163 +54,166 @@ class MyTripPostPage extends ConsumerWidget {
             if (uid != thisTrip.uid) {
               return const SizedBox(height: 0);
             }
-            return Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    // Navigator to TripPlan Page
-                    ref
-                        .read(tripProvider)
-                        .modifyTripData(modifiedTripData: thisTrip);
-                    ref.read(planOfDaysIndex.notifier).selectIndex(0);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TripPlanPage(),
-                      ),
-                    );
-                  },
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: imageHeight,
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: imageWidth,
-                          height: imageHeight,
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: Hero(
-                            tag: thisTrip.docName,
-                            child: thisImage != null
-                                ? CachedNetworkImage(
-                                    imageUrl: thisTrip.planOfDay['0'][0]
-                                        ['image'],
-                                    imageBuilder: (context, imageProvider) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      // Navigator to TripPlan Page
+                      ref
+                          .read(tripProvider)
+                          .modifyTripData(modifiedTripData: thisTrip);
+                      ref.read(planOfDaysIndex.notifier).selectIndex(0);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TripPlanPage(),
+                        ),
+                      );
+                    },
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: imageHeight,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: imageWidth,
+                            height: imageHeight,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: Hero(
+                              tag: thisTrip.docName,
+                              child: thisImage != null
+                                  ? CachedNetworkImage(
+                                      imageUrl: thisTrip.planOfDay['0'][0]
+                                          ['image'],
+                                      imageBuilder: (context, imageProvider) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : Center(
-                                    child: Icon(
-                                      Icons.image,
-                                      size: imageWidth / 5,
-                                      color: Colors.white,
+                                        );
+                                      },
+                                    )
+                                  : Center(
+                                      child: Icon(
+                                        Icons.image,
+                                        size: imageWidth / 5,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.8),
+                                      borderRadius: const BorderRadius.vertical(
+                                          bottom: Radius.circular(8)),
+                                    ),
+                                    child: Text(
+                                      thisTrip.nation,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                      ),
                                     ),
                                   ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
-                                    borderRadius: const BorderRadius.vertical(
-                                        bottom: Radius.circular(8)),
-                                  ),
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  color: Colors.white.withOpacity(0.8),
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 20),
                                   child: Text(
-                                    thisTrip.nation,
+                                    thisTrip.title,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                color: Colors.white.withOpacity(0.8),
-                                alignment: Alignment.centerLeft,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 20),
-                                child: Text(
-                                  thisTrip.title,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              isPosted
+                                  ? AppLocalizations.of(context)!.postShared
+                                  : AppLocalizations.of(context)!.postNotShared,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        InkWell(
+                          onTap: () {
+                            //connect share logic
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey, width: 1),
+                            ),
+                            child: Text(
+                              isPosted
+                                  ? AppLocalizations.of(context)!.cancelSharing
+                                  : AppLocalizations.of(context)!.share,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 1,
-                    ),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            isPosted
-                                ? AppLocalizations.of(context)!.postShared
-                                : AppLocalizations.of(context)!.postNotShared,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () {
-                          //connect share logic
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey, width: 1),
-                          ),
-                          child: Text(
-                            isPosted
-                                ? AppLocalizations.of(context)!.cancelSharing
-                                : AppLocalizations.of(context)!.share,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           },
           separatorBuilder: (ctx, idx) {
