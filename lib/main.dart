@@ -53,7 +53,7 @@ class RoutePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var currentUser = FirebaseAuth.instance.currentUser;
+    User? currentUser = FirebaseAuth.instance.currentUser;
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       initialData: currentUser,
