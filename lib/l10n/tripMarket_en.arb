@@ -1,4 +1,6 @@
 {
+    "yes": "Yes",
+    "no": "No",
     "tripMarket": "TripMarket",
     "signInWithGoogle": "Sign in with Google",
     "signInWithApple": "Sign in with Apple",
@@ -36,6 +38,8 @@
     "cancel": "Cancel",
     "postNotShared": "This post is not shared",
     "postShared": "This post is shared",
+    "areYouSureShare": "Are you sure about sharing this trip?",
+    "areYouSureCancelShare": "Are you sure about canceling the sharing of this trip?",
     "cancelSharing": "Cancel sharing",
     "share": "Share"
 }

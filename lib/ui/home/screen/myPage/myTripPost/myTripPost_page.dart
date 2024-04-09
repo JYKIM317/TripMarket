@@ -193,13 +193,51 @@ class MyTripPostPage extends ConsumerWidget {
                         //share state
                         InkWell(
                           onTap: () {
-                            isPosted
-                                ? ref
-                                    .read(postProvider)
-                                    .deleteSharedMyTrip(trip: thisTrip)
-                                : ref
-                                    .read(postProvider)
-                                    .shareMyTrip(trip: thisTrip);
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                return AlertDialog(
+                                  content: Text(
+                                    isPosted
+                                        ? AppLocalizations.of(context)!
+                                            .areYouSureCancelShare
+                                        : AppLocalizations.of(context)!
+                                            .areYouSureShare,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(dialogContext);
+                                      },
+                                      child: Text(
+                                        AppLocalizations.of(context)!.no,
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                    // share or cancel
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(dialogContext);
+                                        isPosted
+                                            ? ref
+                                                .read(postProvider)
+                                                .deleteSharedMyTrip(
+                                                    trip: thisTrip)
+                                            : ref
+                                                .read(postProvider)
+                                                .shareMyTrip(trip: thisTrip);
+                                      },
+                                      child: Text(
+                                        AppLocalizations.of(context)!.yes,
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
