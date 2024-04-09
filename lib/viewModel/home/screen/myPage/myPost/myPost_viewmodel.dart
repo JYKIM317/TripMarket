@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trip_market/data/repository/database/database_repository.dart';
+import 'package:trip_market/data/repository/database/post_repository.dart';
 import 'package:trip_market/model/trip_model.dart';
 
 class MyPostViewModel extends ChangeNotifier {

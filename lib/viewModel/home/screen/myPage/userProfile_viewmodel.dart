@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trip_market/data/repository/database/database_repository.dart';
+import 'package:trip_market/data/repository/database/userProfile_repository.dart';
 import 'package:trip_market/model/user_model.dart';
 
 class UserProfileViewModel extends ChangeNotifier {
