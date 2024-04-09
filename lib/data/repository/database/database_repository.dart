@@ -85,6 +85,29 @@ class GetUserPostedTripListRepository {
   }
 }
 
+class SetUserPostedTripListRepository {
+  Future<void> toFirestore({required List<String> postList}) async {
+    String userUID = FirebaseAuth.instance.currentUser!.uid;
+    Map<String, dynamic> json = {'docList': postList};
+
+    await FirestorePostRemote().setUserPostedTrip(uid: userUID, json: json);
+  }
+}
+
+class SetTripPostRepository {
+  Future<void> toFirestore({required Trip trip}) async {
+    Map<String, dynamic> json = trip.toJson();
+
+    await FirestorePostRemote().setTripPost(json: json);
+  }
+}
+
+class DeleteTripPostRepository {
+  Future<void> toFirestore({required String docName}) async {
+    await FirestorePostRemote().deleteTripPost(docName: docName);
+  }
+}
+
 class UpdateLoginHistoryRepository {
   Future<void> toFirestore() async {
     String userUID = FirebaseAuth.instance.currentUser!.uid;

@@ -190,9 +190,16 @@ class MyTripPostPage extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
+                        //share state
                         InkWell(
                           onTap: () {
-                            //connect share logic
+                            isPosted
+                                ? ref
+                                    .read(postProvider)
+                                    .deleteSharedMyTrip(trip: thisTrip)
+                                : ref
+                                    .read(postProvider)
+                                    .shareMyTrip(trip: thisTrip);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(

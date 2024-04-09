@@ -46,7 +46,7 @@ class FirestoreUserDocumentRemote {
           .update(json);
     } catch (e) {
       await Analytics().logEvent(
-        logName: 'Firestore User Doc Remote update data exeption',
+        logName: 'Firestore user doc remote update data exeption',
         log: {'exeption': e.toString()},
       );
     }
@@ -60,7 +60,7 @@ class FirestoreUserDocumentRemote {
           .delete();
     } catch (e) {
       await Analytics().logEvent(
-        logName: 'Firestore User Doc Remote delete data exeption',
+        logName: 'Firestore user doc remote delete data exeption',
         log: {'exeption': e.toString()},
       );
     }
