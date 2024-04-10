@@ -14,7 +14,7 @@ class MyTripPostPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
-    List<String>? myPostedTripList = ref.watch(postProvider).postList;
+    List<dynamic>? myPostedTripList = ref.watch(postProvider).postList;
     myPostedTripList ?? ref.read(postProvider).fetchMyPostList();
 
     return Scaffold(

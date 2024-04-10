@@ -3,9 +3,9 @@ import 'package:trip_market/data/repository/database/post_repository.dart';
 import 'package:trip_market/model/trip_model.dart';
 
 class MyPostViewModel extends ChangeNotifier {
-  List<String>? _postList;
+  List<dynamic>? _postList;
 
-  List<String>? get postList => _postList;
+  List<dynamic>? get postList => _postList;
 
   Future<void> fetchMyPostList() async {
     try {

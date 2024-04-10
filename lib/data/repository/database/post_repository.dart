@@ -3,15 +3,15 @@ import 'package:trip_market/data/source/remote/database/post_remote.dart';
 import 'package:trip_market/model/trip_model.dart';
 
 class GetUserPostedTripListRepository {
-  Future<List<String>> fromFirestore() async {
+  Future<List<dynamic>> fromFirestore() async {
     String userUID = FirebaseAuth.instance.currentUser!.uid;
-    List<String> postedDocNameList = [];
+    List<dynamic> postedDocNameList = [];
     await FirestorePostRemote()
         .getUserPostedTrip(uid: userUID)
         .then((snapshot) {
       Map<String, dynamic>? docData = snapshot?.data() as Map<String, dynamic>?;
       if (docData != null) {
-        List<String> docList = docData['docList'] ?? [];
+        List<dynamic> docList = docData['docList'] ?? [];
         postedDocNameList.addAll(docList);
       }
     });
@@ -21,7 +21,7 @@ class GetUserPostedTripListRepository {
 }
 
 class SetUserPostedTripListRepository {
-  Future<void> toFirestore({required List<String> postList}) async {
+  Future<void> toFirestore({required List<dynamic> postList}) async {
     String userUID = FirebaseAuth.instance.currentUser!.uid;
     Map<String, dynamic> json = {'docList': postList};
 
