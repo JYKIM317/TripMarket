@@ -121,6 +121,7 @@ class MyPageScreenWidgets {
               Container(
                 height: double.infinity,
                 alignment: Alignment.topCenter,
+                padding: const EdgeInsets.only(top: 10),
                 child: IconButton(
                   onPressed: () {
                     //Settings
