@@ -5,6 +5,7 @@ import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart'; //trip
 import 'package:trip_market/provider/home_provider.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /*
   수집하는 데이터 
@@ -35,7 +36,7 @@ class RecommendGridWidget extends ConsumerWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 16,
           mainAxisSpacing: 24,
-          mainAxisExtent: (MediaQuery.sizeOf(context).width / 1.8),
+          mainAxisExtent: (MediaQuery.sizeOf(context).width / 1.6),
         ),
         itemBuilder: (BuildContext ctx, int idx) {
           Trip thisTrip = tripList![idx];
@@ -146,6 +147,19 @@ class RecommendGridWidget extends ConsumerWidget {
                     thisTrip.title,
                     style: const TextStyle(
                       fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text(
+                    '${thisTrip.duration} ${AppLocalizations.of(context)!.days}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -220,18 +234,42 @@ class _MainBannerWidgetState extends ConsumerState<MainBannerWidget> {
               pageSnapping: true,
               itemCount: banner.length,
               itemBuilder: (BuildContext ctx, int idx) {
-                return CachedNetworkImage(
-                  imageUrl: banner[idx],
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+                return Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: banner[idx],
+                      imageBuilder: (context, imageProvider) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16, bottom: 10),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          '${idx + 1} / ${banner.length}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 );
               },
             )
