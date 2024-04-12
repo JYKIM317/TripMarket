@@ -15,9 +15,9 @@ class MyPageScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 44, bottom: 34),
         child: Column(
           children: [
-            MyPageScreenWidgets().myProfile(),
+            MyProfile(),
             const SizedBox(height: 10),
-            MyPageScreenWidgets().myFeature(),
+            MyFeature(),
             const SizedBox(height: 10),
             Container(
               width: double.infinity,
@@ -25,11 +25,11 @@ class MyPageScreen extends ConsumerWidget {
               color: Colors.grey[100],
             ),
             const SizedBox(height: 20),
-            MyPageScreenWidgets().recentWatch(),
+            RecentWatchTrip(),
             const SizedBox(height: 10),
-            MyPageScreenWidgets().myTravelPlans(),
+            MyTravelPlans(),
             const SizedBox(height: 10),
-            MyPageScreenWidgets().favoritePlan(),
+            FavoritePlans(),
           ],
         ),
       ),

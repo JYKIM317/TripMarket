@@ -1,30 +1,47 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:trip_market/ui/home/screen/home/home_screen_widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+//
+import 'package:trip_market/model/trip_model.dart';
+import 'package:trip_market/provider/myPage_provider.dart';
+//
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
+        padding: const EdgeInsets.only(top: 84, bottom: 44),
         child: Column(
-            /*
-              수집하는 데이터 
-              - Search history
-              - Search or main에서 들어간 post info history
-            */
-            //favorite destinations recommend widget
-            //
-            //favorite tag recommend widget
-            //
-            //random recommend widget
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const MainBannerWidget(),
+            const SizedBox(height: 40),
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Text(
+                AppLocalizations.of(context)!.recommendForYou,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
+            const SizedBox(height: 20),
+            //random recommend widget
+            RecommendGridWidget(
+              tripList: myTripList,
+            ),
+          ],
+        ),
       ),
     );
   }
