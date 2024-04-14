@@ -108,7 +108,11 @@ class SearchHistoryWidget extends ConsumerWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(searchHistoryProvider)
+                                .removeMySearchHistory(index: idx);
+                          },
                           icon: const Icon(Icons.close),
                         ),
                       ],
