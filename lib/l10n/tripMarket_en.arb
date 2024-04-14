@@ -42,5 +42,7 @@
     "areYouSureCancelShare": "Are you sure about canceling the sharing of this trip?",
     "cancelSharing": "Cancel sharing",
     "share": "Share",
-    "recommendForYou": "Recommend for you"
+    "recommendForYou": "Recommend for you",
+    "search": "Search",
+    "searchHistory": "Search history"
 }

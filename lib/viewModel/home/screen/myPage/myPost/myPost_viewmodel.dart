@@ -10,11 +10,10 @@ class MyPostViewModel extends ChangeNotifier {
   Future<void> fetchMyPostList() async {
     try {
       _postList = await GetUserPostedTripListRepository().fromFirestore();
-      notifyListeners();
     } catch (e) {
       _postList = [];
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> shareMyTrip({required Trip trip}) async {

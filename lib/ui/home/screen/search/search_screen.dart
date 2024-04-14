@@ -1,18 +1,23 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:trip_market/ui/home/screen/search/search_screen_widgets.dart';
 
 class SearchScreen extends ConsumerWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        //
-      ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      padding: const EdgeInsets.only(top: 84),
+      child: const Column(
+        children: [
+          SearchBarWidget(),
+          SizedBox(height: 40),
+          SearchHistoryWidget(),
+        ],
+      ),
     );
   }
 }

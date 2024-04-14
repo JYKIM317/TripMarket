@@ -10,11 +10,10 @@ class UserProfileViewModel extends ChangeNotifier {
   Future<void> fetchUserProfile() async {
     try {
       _userProfile = await GetUserProfileRepository().fromFirestore();
-      notifyListeners();
     } catch (e) {
       _userProfile = UserProfile.initial();
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> updateUserProfile({required UserProfile profile}) async {
