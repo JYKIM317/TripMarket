@@ -18,6 +18,54 @@ class FirestorePostRemote {
         .setUserDocumentData(json: json);
   }
 
+  Future<QuerySnapshot?> getTripPostList({
+    DocumentSnapshot? lastDocument,
+    String? nation,
+    int? duration,
+    required int getDocCount,
+  }) async {
+    bool existNationFilter = nation != null;
+    bool existDurationFilter = duration != null;
+    bool isTwoFilter = existNationFilter && existDurationFilter;
+
+    const nationField = 'nation';
+    const durationField = 'duration';
+
+    if (isTwoFilter) {
+      return await FirestorePostCollectionRemote()
+          .getPostWithConstraintCollectionDoc(
+        firstField: nationField,
+        firstFilter: nation,
+        secondField: durationField,
+        secondFilter: duration,
+        lastDocument: lastDocument,
+        getDocCount: getDocCount,
+      );
+    } else if (existNationFilter) {
+      return await FirestorePostCollectionRemote()
+          .getPostWithConstraintCollectionDoc(
+        firstField: nationField,
+        firstFilter: nation,
+        lastDocument: lastDocument,
+        getDocCount: getDocCount,
+      );
+    } else if (existDurationFilter) {
+      return await FirestorePostCollectionRemote()
+          .getPostWithConstraintCollectionDoc(
+        firstField: durationField,
+        firstFilter: duration,
+        lastDocument: lastDocument,
+        getDocCount: getDocCount,
+      );
+    } else {
+      return await FirestorePostCollectionRemote()
+          .getPostNoConstraintCollectionDoc(
+        lastDocument: lastDocument,
+        getDocCount: getDocCount,
+      );
+    }
+  }
+
   Future<void> setTripPost({required Map<String, dynamic> json}) async {
     final String address = json['docName'];
     await FirestorePostDocumentRemote(address: address)

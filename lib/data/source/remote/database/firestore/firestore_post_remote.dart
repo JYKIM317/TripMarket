@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:trip_market/analytics.dart';
 
+const String collectionName = 'post';
+
 class FirestorePostDocumentRemote {
-  final String collectionName = 'post';
   late String address;
 
   FirestorePostDocumentRemote({required this.address});
@@ -53,20 +54,123 @@ class FirestorePostDocumentRemote {
 }
 
 class FirestorePostCollectionRemote {
-  late String address;
+  CollectionReference collection =
+      FirebaseFirestore.instance.collection(collectionName);
 
-  FirestorePostCollectionRemote({required this.address});
+  Future<QuerySnapshot?> getPostNoConstraintCollectionDoc({
+    DocumentSnapshot? lastDocument,
+    required int getDocCount,
+  }) async {
+    if (lastDocument == null) {
+      try {
+        return await collection.limit(getDocCount).get();
+      } catch (e) {
+        await Analytics().logEvent(
+          logName:
+              'Firestore post collection remote get no constraint data exeption',
+          log: {'exeption': e.toString()},
+        );
 
-  Future<QuerySnapshot?> getPostCollectionDoc() async {
-    try {
-      return await FirebaseFirestore.instance.collection(address).get();
-    } catch (e) {
-      await Analytics().logEvent(
-        logName: 'Firestore post collection remote get data exeption',
-        log: {'exeption': e.toString()},
-      );
+        return null;
+      }
+    } else {
+      try {
+        return await collection
+            .startAfterDocument(lastDocument)
+            .limit(getDocCount)
+            .get();
+      } catch (e) {
+        await Analytics().logEvent(
+          logName:
+              'Firestore post collection remote get no constraint data exeption',
+          log: {'exeption': e.toString()},
+        );
 
-      return null;
+        return null;
+      }
+    }
+  }
+
+  Future<QuerySnapshot?> getPostWithConstraintCollectionDoc<T>({
+    DocumentSnapshot? lastDocument,
+    String? firstField,
+    String? secondField,
+    T? firstFilter,
+    T? secondFilter,
+    required int getDocCount,
+  }) async {
+    bool existFirstFilter = firstField != null && firstFilter != null;
+    bool existSecondFilter = secondField != null && secondFilter != null;
+    bool isTwoFilter = existFirstFilter && existSecondFilter;
+
+    if (lastDocument == null) {
+      if (isTwoFilter) {
+        try {
+          return await collection
+              .where(firstField, isEqualTo: firstFilter)
+              .where(secondField, isEqualTo: secondFilter)
+              .limit(getDocCount)
+              .get();
+        } catch (e) {
+          await Analytics().logEvent(
+            logName:
+                'Firestore post collection remote get two constraint data exeption',
+            log: {'exeption': e.toString()},
+          );
+
+          return null;
+        }
+      } else {
+        try {
+          return await collection
+              .where(firstField!, isEqualTo: firstFilter)
+              .limit(getDocCount)
+              .get();
+        } catch (e) {
+          await Analytics().logEvent(
+            logName:
+                'Firestore post collection remote get one constraint data exeption',
+            log: {'exeption': e.toString()},
+          );
+
+          return null;
+        }
+      }
+    } else {
+      if (isTwoFilter) {
+        try {
+          return await collection
+              .startAfterDocument(lastDocument)
+              .where(firstField, isEqualTo: firstFilter)
+              .where(secondField, isEqualTo: secondFilter)
+              .limit(getDocCount)
+              .get();
+        } catch (e) {
+          await Analytics().logEvent(
+            logName:
+                'Firestore post collection remote get two constraint data exeption',
+            log: {'exeption': e.toString()},
+          );
+
+          return null;
+        }
+      } else {
+        try {
+          return await collection
+              .startAfterDocument(lastDocument)
+              .where(firstField!, isEqualTo: firstFilter)
+              .limit(getDocCount)
+              .get();
+        } catch (e) {
+          await Analytics().logEvent(
+            logName:
+                'Firestore post collection remote get one constraint data exeption',
+            log: {'exeption': e.toString()},
+          );
+
+          return null;
+        }
+      }
     }
   }
 }

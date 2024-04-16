@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trip_market/CustomIcon.dart';
 import 'package:trip_market/provider/search_provider.dart';
 
@@ -15,46 +16,138 @@ class SearchBarWidget extends ConsumerStatefulWidget {
 class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
   final TextEditingController _controller = TextEditingController();
 
+  Color deActivateBackgroundColor = Colors.grey[300]!;
+  Color deActivateFontColor = Colors.black;
+
+  Color activateBackgroundColor = Colors.black;
+  Color activateFontColor = Colors.white;
+
   @override
   Widget build(BuildContext context) {
+    String? nationFilter = ref.watch(searchTripProvider).nationFilter;
+    int? durationFilter = ref.watch(searchTripProvider).durationFilter;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              CustomIcon.search,
-              color: Colors.grey,
-              size: 18,
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: TextField(
-                maxLines: 1,
-                controller: _controller,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: AppLocalizations.of(context)!.search,
+            child: Row(
+              children: [
+                const Icon(
+                  CustomIcon.search,
+                  color: Colors.grey,
+                  size: 18,
                 ),
-                onSubmitted: (text) {
-                  String element = text.trim();
-                  _controller.text = '';
-                  if (element != '') {
-                    ref
-                        .read(searchHistoryProvider)
-                        .addMySearchHistory(element: element);
-                  }
-                },
-              ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    maxLines: 1,
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: AppLocalizations.of(context)!.search,
+                    ),
+                    onSubmitted: (text) {
+                      String element = text.trim();
+                      _controller.text = '';
+                      ref.read(searchTripProvider).searchInitialization();
+                      ref.read(searchTripProvider).searchTrip(search: element);
+                      ref
+                          .read(searchHistoryProvider)
+                          .addMySearchHistory(element: element);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () {
+                  ref.read(searchTripProvider).filterInitialization();
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.filterCircleXmark,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(width: 8),
+              //Nation filter
+              InkWell(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: nationFilter == null
+                        ? deActivateBackgroundColor
+                        : activateBackgroundColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        nationFilter ?? AppLocalizations.of(context)!.nation,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: nationFilter == null
+                              ? deActivateFontColor
+                              : activateFontColor,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const FaIcon(
+                        FontAwesomeIcons.caretDown,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              //Duration filter
+              InkWell(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: durationFilter == null
+                        ? deActivateBackgroundColor
+                        : activateBackgroundColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        '${durationFilter ?? AppLocalizations.of(context)!.tripDuration}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: durationFilter == null
+                              ? deActivateFontColor
+                              : activateFontColor,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const FaIcon(
+                        FontAwesomeIcons.caretDown,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -98,6 +191,10 @@ class SearchHistoryWidget extends ConsumerWidget {
                       children: [
                         InkWell(
                           onTap: () {
+                            ref.read(searchTripProvider).searchInitialization();
+                            ref
+                                .read(searchTripProvider)
+                                .searchTrip(search: searchHistory[idx]);
                             ref.read(searchHistoryProvider).addMySearchHistory(
                                 element: searchHistory[idx]);
                           },
