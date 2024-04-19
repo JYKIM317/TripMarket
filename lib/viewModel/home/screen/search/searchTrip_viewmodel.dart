@@ -31,11 +31,13 @@ class SearchTripViewModel extends ChangeNotifier {
   }
 
   setNationFilter({required String nation}) {
-    //
+    nationFilter = nation;
+    notifyListeners();
   }
 
   setDurationFilter({required int duration}) {
-    //
+    durationFilter = duration;
+    notifyListeners();
   }
 
   Future<void> searchTrip({required String search}) async {

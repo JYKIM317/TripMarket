@@ -44,5 +44,7 @@
     "share": "Share",
     "recommendForYou": "Recommend for you",
     "search": "Search",
-    "searchHistory": "Search history"
+    "searchHistory": "Search history",
+    "filter": "filter",
+    "set": "Set"
 }

@@ -14,6 +14,8 @@ class SearchScreen extends ConsumerWidget {
       child: const Column(
         children: [
           SearchBarWidget(),
+          SizedBox(height: 10),
+          SearchFilterWidget(),
           SizedBox(height: 40),
           SearchHistoryWidget(),
         ],
