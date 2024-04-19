@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:trip_market/CustomIcon.dart';
 import 'package:trip_market/provider/search_provider.dart';
-import 'package:trip_market/ui/home/screen/search/filterPage/nationFilter_page.dart';
-import 'package:trip_market/ui/home/screen/search/filterPage/tripDurationFilter_page.dart';
+import 'package:trip_market/ui/home/screen/search/filter/nationFilter_page.dart';
+import 'package:trip_market/ui/home/screen/search/filter/tripDurationFilter_page.dart';
 
 class SearchBarWidget extends ConsumerStatefulWidget {
   const SearchBarWidget({super.key});
