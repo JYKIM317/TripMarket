@@ -63,6 +63,7 @@ class _NationFilterPageState extends ConsumerState<NationFilterPage> {
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey, width: 1),
                 ),
+                clipBehavior: Clip.hardEdge,
                 child: GoogleMap(
                   onMapCreated: (controller) {
                     setState(() {
