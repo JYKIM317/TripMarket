@@ -28,7 +28,7 @@ class SearchResultPage extends ConsumerWidget {
         ),
         titleSpacing: 0,
         title: Text(
-          '${AppLocalizations.of(context)!.nation} ${AppLocalizations.of(context)!.filter}',
+          AppLocalizations.of(context)!.searchResult,
           style: const TextStyle(color: Colors.black),
         ),
         centerTitle: false,
