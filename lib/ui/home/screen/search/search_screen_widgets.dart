@@ -6,6 +6,7 @@ import 'package:trip_market/CustomIcon.dart';
 import 'package:trip_market/provider/search_provider.dart';
 import 'package:trip_market/ui/home/screen/search/filter/nationFilter_page.dart';
 import 'package:trip_market/ui/home/screen/search/filter/tripDurationFilter_page.dart';
+import 'package:trip_market/ui/home/screen/search/searchResult/searchResult_page.dart';
 
 class SearchBarWidget extends ConsumerStatefulWidget {
   const SearchBarWidget({super.key});
@@ -53,6 +54,12 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
                   ref
                       .read(searchHistoryProvider)
                       .addMySearchHistory(element: element);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchResultPage(),
+                    ),
+                  );
                 },
               ),
             ),
@@ -103,7 +110,6 @@ class SearchFilterWidget extends ConsumerWidget {
                 );
               },
               child: Container(
-                //constraints: BoxConstraints(maxWidth: 120),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
@@ -230,6 +236,12 @@ class SearchHistoryWidget extends ConsumerWidget {
                                 .searchTrip(search: searchHistory[idx]);
                             ref.read(searchHistoryProvider).addMySearchHistory(
                                 element: searchHistory[idx]);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchResultPage(),
+                              ),
+                            );
                           },
                           child: Text(
                             searchHistory![idx],

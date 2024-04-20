@@ -19,8 +19,12 @@ class TripPlanPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Trip thisTrip = ref.watch(tripProvider).trip!;
-    List<Trip> myTripList = ref.watch(myTripListProvider).tripList ?? [];
-    UserProfile profile = ref.watch(profileProvider).userProfile!;
+    List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
+    UserProfile? profile = ref.watch(profileProvider).userProfile;
+
+    profile ?? ref.read(profileProvider).fetchUserProfile();
+    myTripList ?? ref.read(myTripListProvider).fetchMyTripList();
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -35,7 +39,7 @@ class TripPlanPage extends ConsumerWidget {
           ),
           actions: [
             //edit trip button
-            if (thisTrip.uid == profile.uid)
+            if (thisTrip.uid == profile!.uid)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(
@@ -64,7 +68,7 @@ class TripPlanPage extends ConsumerWidget {
                 ),
               ),
             //remove trip button
-            if (myTripList.contains(thisTrip))
+            if (myTripList!.contains(thisTrip))
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(

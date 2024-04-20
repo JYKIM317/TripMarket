@@ -41,7 +41,6 @@ class RecommendGridWidget extends ConsumerWidget {
         itemBuilder: (BuildContext ctx, int idx) {
           Trip thisTrip = tripList![idx];
           var thisImage = thisTrip.planOfDay['0'][0]['image'];
-          bool isFile = thisImage.runtimeType != String;
           return InkWell(
             onTap: () {
               // Navigator to TripPlan Page
@@ -79,26 +78,20 @@ class RecommendGridWidget extends ConsumerWidget {
                               ? SizedBox(
                                   width: double.infinity,
                                   height: double.infinity,
-                                  child: isFile
-                                      ? Image.file(
-                                          thisImage,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: thisTrip.planOfDay['0'][0]
-                                              ['image'],
-                                          imageBuilder:
-                                              (context, imageProvider) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            );
-                                          },
+                                  child: CachedNetworkImage(
+                                    imageUrl: thisTrip.planOfDay['0'][0]
+                                        ['image'],
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
+                                      );
+                                    },
+                                  ),
                                 )
                               : const Center(
                                   child: Icon(
