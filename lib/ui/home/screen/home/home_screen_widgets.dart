@@ -49,10 +49,14 @@ class RecommendGridWidget extends ConsumerWidget {
                 ref.read(planOfDaysIndex.notifier).selectIndex(0);
                 //Update my recent view trip
                 ref.read(recentViewProvider).updateMyRecentView(trip: thisTrip);
-                //Update my interest
+                //Update my interest tag
                 ref
                     .read(myInterestProvider)
-                    .updateMyInterest(tagList: thisTrip.tag);
+                    .updateMyInterestTag(tagList: thisTrip.tag);
+                //Update my interest destination
+                ref
+                    .read(myInterestProvider)
+                    .updateMyInterestDestination(destination: thisTrip.nation);
                 // Navigator to TripPlan Page
                 Navigator.push(
                   context,

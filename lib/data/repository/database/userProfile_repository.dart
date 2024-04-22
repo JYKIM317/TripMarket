@@ -97,10 +97,22 @@ class SetUserRecentViewTripRepository {
 //////////////////////////////
 
 class GetUserInterestRepository {
-  final String _key = 'myInterest';
-  Future<Map<String, dynamic>> fromSharedPreferences() async {
+  final String _tagKey = 'myInterestTag';
+  final String _destinationKey = 'myInterestDestination';
+  Future<Map<String, dynamic>> tagFromSharedPreferences() async {
     Map<String, dynamic> interest = {};
-    String? json = await LocalSharedPreferences(key: _key).getString();
+    String? json = await LocalSharedPreferences(key: _tagKey).getString();
+    if (json != null) {
+      interest = jsonDecode(json) as Map<String, dynamic>;
+    }
+
+    return interest;
+  }
+
+  Future<Map<String, dynamic>> destinationFromSharedPreferences() async {
+    Map<String, dynamic> interest = {};
+    String? json =
+        await LocalSharedPreferences(key: _destinationKey).getString();
     if (json != null) {
       interest = jsonDecode(json) as Map<String, dynamic>;
     }
@@ -110,11 +122,18 @@ class GetUserInterestRepository {
 }
 
 class SetUserInterestRepository {
-  final String _key = 'myInterest';
-  Future<void> toSharedPreferences(
+  final String _tagKey = 'myInterestTag';
+  final String _destinationKey = 'myInterestDestination';
+  Future<void> tagToSharedPreferences(
       {required Map<String, dynamic> interest}) async {
     String json = jsonEncode(interest);
-    await LocalSharedPreferences(key: _key).setString(value: json);
+    await LocalSharedPreferences(key: _tagKey).setString(value: json);
+  }
+
+  Future<void> destinationToSharedPreferences(
+      {required Map<String, dynamic> interest}) async {
+    String json = jsonEncode(interest);
+    await LocalSharedPreferences(key: _destinationKey).setString(value: json);
   }
 }
 

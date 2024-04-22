@@ -66,10 +66,13 @@ class SearchResultPage extends ConsumerWidget {
                       ref
                           .read(recentViewProvider)
                           .updateMyRecentView(trip: thisTrip);
-                      //Update my interest
+                      //Update my interest tag
                       ref
                           .read(myInterestProvider)
-                          .updateMyInterest(tagList: thisTrip.tag);
+                          .updateMyInterestTag(tagList: thisTrip.tag);
+                      //Update my interest destination
+                      ref.read(myInterestProvider).updateMyInterestDestination(
+                          destination: thisTrip.nation);
                       // Navigator to TripPlan Page
                       Navigator.push(
                         context,
