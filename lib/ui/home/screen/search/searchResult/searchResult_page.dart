@@ -42,7 +42,6 @@ class SearchResultPage extends ConsumerWidget {
         height: double.infinity,
         child: searchTripList != null
             ? GridView.builder(
-                shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 44),
@@ -58,11 +57,20 @@ class SearchResultPage extends ConsumerWidget {
                   var thisImage = thisTrip.planOfDay['0'][0]['image'];
                   return InkWell(
                     onTap: () {
-                      // Navigator to TripPlan Page
+                      //initialization trip page
                       ref
                           .read(tripProvider)
                           .modifyTripData(modifiedTripData: thisTrip);
                       ref.read(planOfDaysIndex.notifier).selectIndex(0);
+                      //Update my recent view trip
+                      ref
+                          .read(recentViewProvider)
+                          .updateMyRecentView(trip: thisTrip);
+                      //Update my interest
+                      ref
+                          .read(myInterestProvider)
+                          .updateMyInterest(tagList: thisTrip.tag);
+                      // Navigator to TripPlan Page
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -184,7 +192,7 @@ class SearchResultPage extends ConsumerWidget {
                   );
                 },
               )
-            : LoadingGridWidget(),
+            : const LoadingGridWidget(),
       ),
     );
   }

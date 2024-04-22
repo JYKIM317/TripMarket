@@ -28,7 +28,7 @@ class Trip {
     title = json['title'];
     nation = json['nation'];
     duration = json['duration'];
-    createAt = json['createAt'].toDate();
+    createAt = DateTime.fromMillisecondsSinceEpoch(json['createAt']);
     uid = json['uid'];
     planOfDay = jsonDecode(json['planOfDay']);
     tag = json['tag'];
@@ -39,7 +39,7 @@ class Trip {
         'title': title,
         'nation': nation,
         'duration': duration,
-        'createAt': createAt,
+        'createAt': createAt.millisecondsSinceEpoch,
         'uid': uid,
         'planOfDay': jsonEncode(planOfDay),
         'tag': tag,

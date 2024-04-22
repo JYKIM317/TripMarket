@@ -13,7 +13,7 @@ class LocalSharedPreferences {
       return prefs.getStringList(key);
     } catch (e) {
       await Analytics().logEvent(
-        logName: 'Local shared preferences get data exeption',
+        logName: 'Local shared preferences get StringList exeption',
         log: {'exeption': e.toString()},
       );
 
@@ -21,13 +21,33 @@ class LocalSharedPreferences {
     }
   }
 
-  setStringList({required List<String> value}) async {
+  Future<void> setStringList({required List<String> value}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(key, value);
   }
 
-  removeElement() async {
+  Future<void> removeElement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(key);
+  }
+
+  Future<String?> getString() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      return prefs.getString(key);
+    } catch (e) {
+      await Analytics().logEvent(
+        logName: 'Local shared preferences get String exeption',
+        log: {'exeption': e.toString()},
+      );
+
+      return null;
+    }
+  }
+
+  Future<void> setString({required String value}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
   }
 }

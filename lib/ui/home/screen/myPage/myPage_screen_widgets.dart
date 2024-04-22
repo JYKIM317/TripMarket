@@ -13,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trip_market/ui/home/screen/myPage/ownTripList/ownTripList_page.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
 import 'package:trip_market/ui/home/screen/myPage/myTripPost/myTripPost_page.dart';
+import 'package:trip_market/ui/home/screen/myPage/favoriteTripList/favoriteTripList_page.dart';
 
 class MyProfile extends ConsumerWidget {
   const MyProfile({super.key});
@@ -298,6 +299,13 @@ class RecentWatchTrip extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Trip>? myRecentViewTripList =
+        ref.watch(recentViewProvider).recentViewTripList;
+    if (myRecentViewTripList == null) {
+      ref.read(recentViewProvider).fetchMyRecentViewTrip();
+      return loadingMyTrip(context);
+    }
+
     return Container(
       width: double.infinity,
       height: 260,
@@ -305,16 +313,28 @@ class RecentWatchTrip extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppLocalizations.of(context)!.recentView,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 21,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.recentView,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              //only puerpose spacing
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.abc,
+                  color: Colors.transparent,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          //Local Data Source Repository랑 연결
+          const Expanded(child: SizedBox()),
+          HorizenTripViewWidget(tripList: myRecentViewTripList),
         ],
       ),
     );
@@ -366,138 +386,8 @@ class MyTravelPlans extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: ListView.separated(
-              physics: const ClampingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-              scrollDirection: Axis.horizontal,
-              itemCount: myTripList.length,
-              itemBuilder: (BuildContext ctx, int idx) {
-                Trip thisTrip = myTripList[idx];
-                var thisImage = thisTrip.planOfDay['0'][0]['image'];
-                bool isFile = thisImage.runtimeType != String;
-                return InkWell(
-                  onTap: () {
-                    // Navigator to TripPlan Page
-                    ref
-                        .read(tripProvider)
-                        .modifyTripData(modifiedTripData: thisTrip);
-                    ref.read(planOfDaysIndex.notifier).selectIndex(0);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TripPlanPage(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: double.infinity,
-                    width: 300,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 1,
-                        ),
-                      ],
-                    ),
-                    clipBehavior: Clip.hardEdge,
-                    child: Stack(
-                      children: [
-                        Hero(
-                          tag: thisTrip.docName,
-                          child: thisImage != null
-                              ? SizedBox(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  child: isFile
-                                      ? Image.file(
-                                          thisImage,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: thisTrip.planOfDay['0'][0]
-                                              ['image'],
-                                          imageBuilder:
-                                              (context, imageProvider) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                )
-                              : const Center(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 64,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          height: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.8),
-                                    borderRadius: const BorderRadius.vertical(
-                                        bottom: Radius.circular(8)),
-                                  ),
-                                  child: Text(
-                                    thisTrip.nation,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                height: 50,
-                                color: Colors.white.withOpacity(0.8),
-                                alignment: Alignment.centerLeft,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: Text(
-                                  thisTrip.title,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (ctx, idx) {
-                return const SizedBox(width: 10);
-              },
-            ),
-          ),
-          //Remote Data Source Repository랑 연결
+          const Expanded(child: SizedBox()),
+          HorizenTripViewWidget(tripList: myTripList),
         ],
       ),
     );
@@ -509,6 +399,13 @@ class FavoritePlans extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<Trip>? myFavoriteTripList =
+        ref.watch(favoriteProvider).favoriteTripList;
+    if (myFavoriteTripList == null) {
+      ref.read(favoriteProvider).fetchMyFavoriteTrip();
+      return loadingMyTrip(context);
+    }
+
     return Container(
       width: double.infinity,
       height: 260,
@@ -527,7 +424,14 @@ class FavoritePlans extends ConsumerWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FavoriteTripListPage(),
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: Colors.black,
@@ -536,9 +440,8 @@ class FavoritePlans extends ConsumerWidget {
               ),
             ],
           ),
-
-          const SizedBox(height: 20),
-          //Local Data Source Repository랑 연결
+          const Expanded(child: SizedBox()),
+          HorizenTripViewWidget(tripList: myFavoriteTripList),
         ],
       ),
     );
@@ -628,6 +531,144 @@ Widget loadingProfile(BuildContext context) {
       ),
     ),
   );
+}
+
+//////////////////////////////////
+
+class HorizenTripViewWidget extends ConsumerWidget {
+  final List<Trip> tripList;
+  const HorizenTripViewWidget({super.key, required this.tripList});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      height: 200,
+      child: ListView.separated(
+        physics: const ClampingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+        scrollDirection: Axis.horizontal,
+        itemCount: tripList.length,
+        itemBuilder: (BuildContext ctx, int idx) {
+          Trip thisTrip = tripList[idx];
+          var thisImage = thisTrip.planOfDay['0'][0]['image'];
+          bool isFile = thisImage.runtimeType != String;
+          return InkWell(
+            onTap: () {
+              // Navigator to TripPlan Page
+              ref.read(tripProvider).modifyTripData(modifiedTripData: thisTrip);
+              ref.read(planOfDaysIndex.notifier).selectIndex(0);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TripPlanPage(),
+                ),
+              );
+            },
+            child: Container(
+              height: double.infinity,
+              width: 300,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 1,
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: Stack(
+                children: [
+                  Hero(
+                    tag: thisTrip.docName,
+                    child: thisImage != null
+                        ? SizedBox(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: isFile
+                                ? Image.file(
+                                    thisImage,
+                                    fit: BoxFit.cover,
+                                  )
+                                : CachedNetworkImage(
+                                    imageUrl: thisTrip.planOfDay['0'][0]
+                                        ['image'],
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          )
+                        : const Center(
+                            child: Icon(
+                              Icons.image,
+                              size: 64,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.8),
+                              borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(8)),
+                            ),
+                            child: Text(
+                              thisTrip.nation,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          height: 50,
+                          color: Colors.white.withOpacity(0.8),
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            thisTrip.title,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        separatorBuilder: (ctx, idx) {
+          return const SizedBox(width: 10);
+        },
+      ),
+    );
+  }
 }
 
 Widget loadingMyTrip(BuildContext context) {

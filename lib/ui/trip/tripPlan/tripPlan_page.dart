@@ -19,11 +19,17 @@ class TripPlanPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Trip thisTrip = ref.watch(tripProvider).trip!;
-    List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
+    List<String>? myTripNameList =
+        ref.watch(myTripListProvider).tripDocNameList;
     UserProfile? profile = ref.watch(profileProvider).userProfile;
+    List<String>? myFavoriteTripList =
+        ref.watch(favoriteProvider).favoriteTripNameList;
+    List<dynamic>? myPostList = ref.watch(postProvider).postList;
 
     profile ?? ref.read(profileProvider).fetchUserProfile();
-    myTripList ?? ref.read(myTripListProvider).fetchMyTripList();
+    myTripNameList ?? ref.read(myTripListProvider).fetchMyTripList();
+    myFavoriteTripList ?? ref.read(favoriteProvider).fetchMyFavoriteDocName();
+    myPostList ?? ref.read(postProvider).fetchMyPostList();
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -39,7 +45,8 @@ class TripPlanPage extends ConsumerWidget {
           ),
           actions: [
             //edit trip button
-            if (thisTrip.uid == profile!.uid)
+            if (thisTrip.uid == profile!.uid &&
+                myTripNameList!.contains(thisTrip.docName))
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(
@@ -68,44 +75,70 @@ class TripPlanPage extends ConsumerWidget {
                 ),
               ),
             //remove trip button
-            if (myTripList!.contains(thisTrip))
+            if (myTripNameList!.contains(thisTrip.docName))
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(
                   onPressed: () async {
-                    //remove this trip
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context2) {
-                        return AlertDialog(
-                          content: Text(
-                              AppLocalizations.of(context)!.areYouSureRemove),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context2);
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.cancel,
-                                style: const TextStyle(color: Colors.black),
+                    if (myPostList!.contains(thisTrip.docName)) {
+                      //Can't remove it
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context2) {
+                          return AlertDialog(
+                            content:
+                                Text(AppLocalizations.of(context)!.postShared),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context2);
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.yes,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                ref.read(myTripListProvider).removeAtMyTripList(
-                                    trip: ref.read(tripProvider).trip!);
-                                Navigator.pop(context2);
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.remove,
-                                style: const TextStyle(color: Colors.red),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      //remove this trip
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context2) {
+                          return AlertDialog(
+                            content: Text(
+                                AppLocalizations.of(context)!.areYouSureRemove),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context2);
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.cancel,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                              TextButton(
+                                onPressed: () {
+                                  ref
+                                      .read(myTripListProvider)
+                                      .removeAtMyTripList(
+                                          trip: ref.read(tripProvider).trip!);
+                                  Navigator.pop(context2);
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.remove,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
                   },
                   icon: const FaIcon(
                     FontAwesomeIcons.trash,
@@ -115,16 +148,40 @@ class TripPlanPage extends ConsumerWidget {
                 ),
               ),
             //favorite trip button
-            if (!myTripList.contains(thisTrip) && thisTrip.uid != profile.uid)
+            if (thisTrip.uid != profile.uid &&
+                !myTripNameList.contains(thisTrip.docName))
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: IconButton(
                   onPressed: () async {
-                    //favorite add or remove logic
+                    ref.read(myTripListProvider).addMyTripList(trip: thisTrip);
                   },
-                  icon: const FaIcon(
-                    //if this trip contains in favorite list, reveal solidHeart else heart
-                    FontAwesomeIcons.heart,
+                  icon: Text(
+                    AppLocalizations.of(context)!.save,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            //favorite trip button
+            if (thisTrip.uid != profile.uid &&
+                !myTripNameList.contains(thisTrip.docName))
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IconButton(
+                  onPressed: () async {
+                    String docName = thisTrip.docName;
+                    myFavoriteTripList.contains(docName)
+                        ? ref
+                            .read(favoriteProvider)
+                            .removeMyFavoriteTrip(docName: docName)
+                        : ref
+                            .read(favoriteProvider)
+                            .addMyFavoriteTrip(docName: docName);
+                  },
+                  icon: FaIcon(
+                    myFavoriteTripList!.contains(thisTrip.docName)
+                        ? FontAwesomeIcons.solidHeart
+                        : FontAwesomeIcons.heart,
                     color: Colors.red,
                     size: 21,
                   ),

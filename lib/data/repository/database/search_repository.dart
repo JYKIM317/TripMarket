@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:trip_market/data/source/local/database/sharedPreferences_remote.dart';
+import 'package:trip_market/data/source/local/database/sharedPreferences_local.dart';
 import 'package:trip_market/data/source/remote/database/post_remote.dart';
 import 'package:trip_market/model/trip_model.dart';
 
@@ -42,7 +42,7 @@ class GetSearchTripList {
     List<Trip> tripPostList = existingTripList ?? [];
 
     await FirestorePostRemote()
-        .getTripPostList(
+        .getSearchTripPostList(
       nation: nationFilter,
       duration: durationFilter,
       lastDocument: lastDoc,

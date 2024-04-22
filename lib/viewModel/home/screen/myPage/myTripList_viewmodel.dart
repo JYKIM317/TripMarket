@@ -4,14 +4,23 @@ import 'package:trip_market/model/trip_model.dart';
 
 class MyTripListViewModel extends ChangeNotifier {
   List<Trip>? _tripList;
-
   List<Trip>? get tripList => _tripList;
+
+  List<String>? _tripDocNameList;
+  List<String>? get tripDocNameList => _tripDocNameList;
 
   Future<void> fetchMyTripList() async {
     try {
       _tripList = await GetUserTripListRepository().fromFirestore();
+      if (_tripList!.isNotEmpty) {
+        for (Trip thisTrip in _tripList!) {
+          _tripDocNameList ??= [];
+          _tripDocNameList!.add(thisTrip.docName);
+        }
+      }
     } catch (e) {
       _tripList = [];
+      _tripDocNameList = [];
     }
     notifyListeners();
   }
@@ -24,8 +33,10 @@ class MyTripListViewModel extends ChangeNotifier {
     modify ??= false;
     if (!modify) {
       _tripList!.insert(0, trip);
+      _tripDocNameList!.insert(0, trip.docName);
       notifyListeners();
     }
+    await SaveTripRepository().toFirestore(trip: trip);
   }
 
   Future<void> removeAtMyTripList({required Trip trip}) async {

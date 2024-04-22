@@ -18,7 +18,7 @@ class FirestorePostRemote {
         .setUserDocumentData(json: json);
   }
 
-  Future<QuerySnapshot?> getTripPostList({
+  Future<QuerySnapshot?> getSearchTripPostList({
     DocumentSnapshot? lastDocument,
     String? nation,
     int? duration,
@@ -64,6 +64,19 @@ class FirestorePostRemote {
         getDocCount: getDocCount,
       );
     }
+  }
+
+  Future<QuerySnapshot?> getTripPost({
+    required String field,
+    required dynamic constraint,
+    required int docCount,
+  }) async {
+    return await FirestorePostCollectionRemote()
+        .getPostWithConstraintCollectionDoc(
+      firstField: field,
+      firstFilter: constraint,
+      getDocCount: docCount,
+    );
   }
 
   Future<void> setTripPost({required Map<String, dynamic> json}) async {

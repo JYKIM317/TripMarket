@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:trip_market/ui/home/screen/home/home_screen_widgets.dart';
@@ -9,21 +11,21 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //TODO:
     List<Trip>?
         recommendTripList; //= ref.watch(recommendTripProvider).tripList;
     // recommendTripList ?? ref.read(recommendTripProvider).fetchData();
+
     return SizedBox(
       width: double.infinity,
       height: double.infinity,
-      child: SingleChildScrollView(
+      child: CustomScrollView(
         physics: const ClampingScrollPhysics(),
-        padding: const EdgeInsets.only(top: 84, bottom: 44),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const MainBannerWidget(),
-            const SizedBox(height: 40),
-            Padding(
+        slivers: [
+          const SliverToBoxAdapter(child: MainBannerWidget()),
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+          SliverToBoxAdapter(
+            child: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
                 AppLocalizations.of(context)!.recommendForYou,
@@ -33,13 +35,14 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            //random recommend widget
-            RecommendGridWidget(
-              tripList: recommendTripList,
-            ),
-          ],
-        ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          //random recommend widget
+          RecommendGridWidget(
+            tripList: recommendTripList,
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 44)),
+        ],
       ),
     );
   }
