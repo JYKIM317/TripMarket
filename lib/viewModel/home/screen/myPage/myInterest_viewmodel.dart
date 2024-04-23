@@ -8,9 +8,13 @@ class MyInterestViewModel extends ChangeNotifier {
   Map<String, dynamic>? _myInterestDestination;
   Map<String, dynamic>? get myInterestDestination => _myInterestDestination;
 
-  Future<void> fetchMyInterest() async {
+  Future<void> fetchMyInterestTag() async {
     _myInterestTag =
         await GetUserInterestRepository().tagFromSharedPreferences();
+    notifyListeners();
+  }
+
+  Future<void> fetchMyInterestDestination() async {
     _myInterestDestination =
         await GetUserInterestRepository().destinationFromSharedPreferences();
     notifyListeners();

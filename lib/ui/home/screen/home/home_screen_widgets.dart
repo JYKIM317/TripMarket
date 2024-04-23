@@ -14,15 +14,32 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 */
 
 class RecommendGridWidget extends ConsumerWidget {
-  final List<dynamic>? tripList;
-  const RecommendGridWidget({
-    super.key,
-    required this.tripList,
-  });
+  const RecommendGridWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (tripList == null) {
+    Map<String, dynamic>? myInterestTag =
+        ref.watch(myInterestProvider).myInterestTag;
+    Map<String, dynamic>? myInterestDestination =
+        ref.watch(myInterestProvider).myInterestDestination;
+    myInterestTag ?? ref.read(myInterestProvider).fetchMyInterestTag();
+    myInterestDestination ??
+        ref.read(myInterestProvider).fetchMyInterestDestination();
+
+    //TODO:
+    List<Trip>?
+        recommendTripList; //= ref.watch(recommendTripProvider).tripList;
+
+    if (recommendTripList == null) {
+      /*
+      TODO:
+      if(myInterestTag != null && myInterestDestination != null) {
+        ref.read(recommendTripProvider).fetchData(
+          myInterestTag
+          myInterestDestination
+        );
+      }
+      */
       return const SliverToBoxAdapter(child: LoadingGridWidget());
     }
 
@@ -36,9 +53,9 @@ class RecommendGridWidget extends ConsumerWidget {
           mainAxisExtent: (MediaQuery.sizeOf(context).width / 1.6),
         ),
         delegate: SliverChildBuilderDelegate(
-          childCount: tripList!.length,
+          childCount: recommendTripList.length,
           (BuildContext ctx, int idx) {
-            Trip thisTrip = tripList![idx];
+            Trip thisTrip = recommendTripList[idx];
             var thisImage = thisTrip.planOfDay['0'][0]['image'];
             return InkWell(
               onTap: () {

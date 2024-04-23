@@ -19,17 +19,12 @@ class HomePage extends ConsumerWidget {
 
     List<Trip>? myTripList = ref.watch(myTripListProvider).tripList;
     UserProfile? profile = ref.watch(profileProvider).userProfile;
-    Map<String, dynamic>? myInterestTag =
-        ref.watch(myInterestProvider).myInterestTag;
-    Map<String, dynamic>? myInterestDestination =
-        ref.watch(myInterestProvider).myInterestDestination;
     List<String>? myFavoriteTripName =
         ref.watch(favoriteProvider).favoriteTripNameList;
     List<dynamic>? myPostList = ref.watch(postProvider).postList;
 
     profile ?? ref.read(profileProvider).fetchUserProfile();
     myTripList ?? ref.read(myTripListProvider).fetchMyTripList();
-    myInterestTag ?? ref.read(myInterestProvider).fetchMyInterest();
     myFavoriteTripName ?? ref.read(favoriteProvider).fetchMyFavoriteDocName();
     myPostList ?? ref.read(postProvider).fetchMyPostList();
 
