@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trip_market/model/trip_model.dart';
 import 'package:trip_market/provider/myPage_provider.dart'; //trip
 import 'package:trip_market/provider/home_provider.dart';
+import 'package:trip_market/provider/search_provider.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,9 +23,13 @@ class RecommendGridWidget extends ConsumerWidget {
         ref.watch(myInterestProvider).myInterestTag;
     Map<String, dynamic>? myInterestDestination =
         ref.watch(myInterestProvider).myInterestDestination;
+    List<String>? searchHistory =
+        ref.watch(searchHistoryProvider).searchHistory;
+
     myInterestTag ?? ref.read(myInterestProvider).fetchMyInterestTag();
     myInterestDestination ??
         ref.read(myInterestProvider).fetchMyInterestDestination();
+    searchHistory ?? ref.read(searchHistoryProvider).fetchMySearchHistory();
 
     //TODO:
     List<Trip>?
@@ -33,10 +38,13 @@ class RecommendGridWidget extends ConsumerWidget {
     if (recommendTripList == null) {
       /*
       TODO:
-      if(myInterestTag != null && myInterestDestination != null) {
+      bool fetchYet = myInterestTag == null || myInterestDestination == null || searchHistory == null;
+      
+      if(!fetchYet) {
         ref.read(recommendTripProvider).fetchData(
-          myInterestTag
-          myInterestDestination
+          myInterestTag,
+          myInterestDestination,
+          searchHistor,
         );
       }
       */

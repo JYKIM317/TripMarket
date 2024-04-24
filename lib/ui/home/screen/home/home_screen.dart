@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 20)),
           //random recommend widget
-          RecommendGridWidget(),
+          const RecommendGridWidget(),
           const SliverToBoxAdapter(child: SizedBox(height: 44)),
         ],
       ),

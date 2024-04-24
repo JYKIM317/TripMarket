@@ -14,6 +14,7 @@ class SearchTripViewModel extends ChangeNotifier {
   DocumentSnapshot? lastDoc;
 
   String? nationFilter;
+  String? search;
   int? durationFilter;
 
   searchInitialization() {
@@ -21,6 +22,7 @@ class SearchTripViewModel extends ChangeNotifier {
     isLoading = false;
     tripCount = 0;
     lastDoc = null;
+    search = null;
     notifyListeners();
   }
 
@@ -28,6 +30,10 @@ class SearchTripViewModel extends ChangeNotifier {
     nationFilter = null;
     durationFilter = null;
     notifyListeners();
+  }
+
+  setSearchText({required String text}) {
+    search = text;
   }
 
   setNationFilter({required String nation}) {
@@ -40,37 +46,38 @@ class SearchTripViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchTrip({required String search}) async {
-    isLoading = true;
-    notifyListeners();
-    tripCount += 30;
+  Future<void> searchTrip({bool? recursion}) async {
+    recursion ??= false;
+    if (!isLoading || recursion) {
+      isLoading = true;
+      notifyListeners();
+      tripCount += 30;
 
-    await GetSearchTripList()
-        .fromFirestore(
-      search: search,
-      tripCount: tripCount,
-      nationFilter: nationFilter,
-      durationFilter: durationFilter,
-      existingTripList: _searchTripList,
-      lastDoc: lastDoc,
-    )
-        .then((response) {
-      if (response.isNotEmpty) {
-        _searchTripList = response['searchTripList'];
-        bool existAnyDoc = response['existAnyDoc'];
-        lastDoc = response['lastDoc'];
+      await GetSearchTripList()
+          .fromFirestore(
+        search: search ?? '',
+        tripCount: tripCount,
+        nationFilter: nationFilter,
+        durationFilter: durationFilter,
+        existingTripList: _searchTripList,
+        lastDoc: lastDoc,
+      )
+          .then((response) {
+        if (response.isNotEmpty) {
+          _searchTripList = response['searchTripList'];
+          bool existAnyDoc = response['existAnyDoc'];
+          lastDoc = response['lastDoc'];
 
-        //재귀
-        if (_searchTripList!.length < tripCount && existAnyDoc) {
-          tripCount -= 30;
-          searchTrip(search: search);
+          //재귀
+          if (_searchTripList!.length < tripCount && existAnyDoc) {
+            tripCount -= 30;
+            searchTrip(recursion: true);
+          }
         }
-      }
-    });
+      });
 
-    isLoading = false;
-    notifyListeners();
+      isLoading = false;
+      notifyListeners();
+    }
   }
-
-  //trip count랑 > searchTripList length인데 existMoreDoc : true 면 재귀함수
 }

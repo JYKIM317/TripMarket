@@ -50,7 +50,8 @@ class _SearchBarWidgetState extends ConsumerState<SearchBarWidget> {
                   String element = text.trim();
                   _controller.text = '';
                   ref.read(searchTripProvider).searchInitialization();
-                  ref.read(searchTripProvider).searchTrip(search: element);
+                  ref.read(searchTripProvider).setSearchText(text: element);
+                  ref.read(searchTripProvider).searchTrip();
                   ref
                       .read(searchHistoryProvider)
                       .addMySearchHistory(element: element);
@@ -233,7 +234,8 @@ class SearchHistoryWidget extends ConsumerWidget {
                             ref.read(searchTripProvider).searchInitialization();
                             ref
                                 .read(searchTripProvider)
-                                .searchTrip(search: searchHistory[idx]);
+                                .setSearchText(text: searchHistory[idx]);
+                            ref.read(searchTripProvider).searchTrip();
                             ref.read(searchHistoryProvider).addMySearchHistory(
                                 element: searchHistory[idx]);
                             Navigator.push(

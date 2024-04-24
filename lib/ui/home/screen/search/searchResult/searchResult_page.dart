@@ -8,11 +8,44 @@ import 'package:trip_market/provider/search_provider.dart';
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
 import 'package:trip_market/ui/home/screen/home/home_screen_widgets.dart';
 
-class SearchResultPage extends ConsumerWidget {
+class SearchResultPage extends ConsumerStatefulWidget {
   const SearchResultPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SearchResultPageState();
+}
+
+class _SearchResultPageState extends ConsumerState<SearchResultPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  onScroll() {
+    bool reachMaxExtent =
+        _scrollController.offset >= _scrollController.position.maxScrollExtent;
+    bool outOfRange = !_scrollController.position.outOfRange &&
+        _scrollController.position.pixels != 0;
+
+    if (reachMaxExtent && outOfRange) {
+      ref.read(searchTripProvider).searchTrip();
+    }
+  }
+
+  @override
+  void initState() {
+    _scrollController.addListener(() {
+      onScroll();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     List<Trip>? searchTripList = ref.watch(searchTripProvider).searchTripList;
 
     return Scaffold(
@@ -43,6 +76,7 @@ class SearchResultPage extends ConsumerWidget {
         child: searchTripList != null
             ? GridView.builder(
                 physics: const ClampingScrollPhysics(),
+                controller: _scrollController,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 44),
                 itemCount: searchTripList.length,
