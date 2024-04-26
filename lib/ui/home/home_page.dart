@@ -22,11 +22,14 @@ class HomePage extends ConsumerWidget {
     List<String>? myFavoriteTripName =
         ref.watch(favoriteProvider).favoriteTripNameList;
     List<dynamic>? myPostList = ref.watch(postProvider).postList;
+    List<Trip>? recentViewTrip =
+        ref.watch(recentViewProvider).recentViewTripList;
 
     profile ?? ref.read(profileProvider).fetchUserProfile();
     myTripList ?? ref.read(myTripListProvider).fetchMyTripList();
     myFavoriteTripName ?? ref.read(favoriteProvider).fetchMyFavoriteDocName();
     myPostList ?? ref.read(postProvider).fetchMyPostList();
+    recentViewTrip ?? ref.read(recentViewProvider).fetchMyRecentViewTrip();
 
     return Scaffold(
       backgroundColor: Colors.white,

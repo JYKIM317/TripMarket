@@ -263,30 +263,6 @@ class MyFeature extends ConsumerWidget {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    CustomIcon.edit,
-                    color: Colors.white,
-                    shadows: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2,
-                      )
-                    ],
-                    size: 24,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    AppLocalizations.of(context)!.writeReview,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

@@ -2,52 +2,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trip_market/model/trip_model.dart';
-import 'package:trip_market/provider/myPage_provider.dart'; //trip
+import 'package:trip_market/provider/myPage_provider.dart';
 import 'package:trip_market/provider/home_provider.dart';
-import 'package:trip_market/provider/search_provider.dart';
+
 import 'package:trip_market/ui/trip/tripPlan/tripPlan_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-/*
-  수집하는 데이터 
-  - Search history
-  - Search or main 에서 들어간 post info history
-*/
 
 class RecommendGridWidget extends ConsumerWidget {
   const RecommendGridWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Map<String, dynamic>? myInterestTag =
-        ref.watch(myInterestProvider).myInterestTag;
-    Map<String, dynamic>? myInterestDestination =
-        ref.watch(myInterestProvider).myInterestDestination;
-    List<String>? searchHistory =
-        ref.watch(searchHistoryProvider).searchHistory;
-
-    myInterestTag ?? ref.read(myInterestProvider).fetchMyInterestTag();
-    myInterestDestination ??
-        ref.read(myInterestProvider).fetchMyInterestDestination();
-    searchHistory ?? ref.read(searchHistoryProvider).fetchMySearchHistory();
-
-    //TODO:
-    List<Trip>?
-        recommendTripList; //= ref.watch(recommendTripProvider).tripList;
+    List<Trip>? recommendTripList =
+        ref.watch(recommendProvider).recommendTripList;
 
     if (recommendTripList == null) {
-      /*
-      TODO:
-      bool fetchYet = myInterestTag == null || myInterestDestination == null || searchHistory == null;
-      
-      if(!fetchYet) {
-        ref.read(recommendTripProvider).fetchData(
-          myInterestTag,
-          myInterestDestination,
-          searchHistor,
-        );
-      }
-      */
       return const SliverToBoxAdapter(child: LoadingGridWidget());
     }
 

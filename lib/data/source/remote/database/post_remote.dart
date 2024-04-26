@@ -79,6 +79,17 @@ class FirestorePostRemote {
     );
   }
 
+  Future<QuerySnapshot?> getTripPostList({
+    DocumentSnapshot? lastDoc,
+    required int docCount,
+  }) async {
+    return await FirestorePostCollectionRemote()
+        .getPostNoConstraintCollectionDoc(
+      lastDocument: lastDoc,
+      getDocCount: docCount,
+    );
+  }
+
   Future<void> setTripPost({required Map<String, dynamic> json}) async {
     final String address = json['docName'];
     await FirestorePostDocumentRemote(address: address)
