@@ -67,7 +67,7 @@ class GetRecommendTripList {
               response.addAll({'existAnyDoc': false});
               if (snapshot.docs.length != getDocCount) {
                 for (int i = 0;
-                    tripPostList.length < tripCount && i + 1 < tempList.length;
+                    tripPostList.length < tripCount && i < tempList.length;
                     i++) {
                   tripPostList.add(tempList[i]);
                 }
