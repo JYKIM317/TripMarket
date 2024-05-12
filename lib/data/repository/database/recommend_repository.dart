@@ -48,7 +48,6 @@ class GetRecommendTripList {
                 interestSearch = false;
               }
             }
-            print('dd');
 
             if (interestDestination || interestTag || interestSearch) {
               Trip thisTrip = Trip.fromJson(tripPost);
