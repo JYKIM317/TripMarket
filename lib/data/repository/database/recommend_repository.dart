@@ -35,7 +35,7 @@ class GetRecommendTripList {
                 destinationList.contains(tripPost['nation']);
             bool interestTag = tagList
                 .contains((element) => tripPost['tag'].contains(element));
-            late bool interestSearch;
+            bool interestSearch = false;
             for (String search in searchHistory) {
               //
               if (tripPost['title'].contains(search)) {
@@ -48,6 +48,7 @@ class GetRecommendTripList {
                 interestSearch = false;
               }
             }
+            print('dd');
 
             if (interestDestination || interestTag || interestSearch) {
               Trip thisTrip = Trip.fromJson(tripPost);
